@@ -50,15 +50,21 @@ rule tokenize = parse
 | "else" { ELSE }
 | "while" { WHILE }
 | "for" { FOR }
+| "break" { BREAK }
+| "continue" { CONTINUE }
+| "return" { RETURN }
 (* TYPES *)
+| "bool" { BOOL }
 | "int" { INT }
 | "float" { FLOAT }
 | "char" { CHAR }
-| "bool" { BOOL }
+| "struct" { STRUCT }
 | "node" { NODE }
 | "edge" { EDGE }
 | "graph" { GRAPH }
 (* CONSTANTS *)
+| "true" { TRUE }
+| "false" { FALSE }
 | digit+ as lxm { INTLIT(int_of_string lxm) }
 | (digit+) '.' (digit+) as lxm { FLOATLIT(float_of_string lxm) }
 | '"' { STRLIT(string_const "" lexbuf) }
@@ -68,6 +74,9 @@ rule tokenize = parse
 | ''' "\\n" ''' { CHARLIT('\n') }
 | ''' "\\t" ''' { CHARLIT('\t') }
 | ''' "\\r" ''' { CHARLIT('\r') }
+(* MEMORY *)
+| "new" { NEW }
+| "delete" { DELETE }
 (* IDENTIFIERS *)
 | letter (letter | digit | '_')* as id { ID(id) }
 (* EOF *)
