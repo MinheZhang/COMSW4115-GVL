@@ -41,6 +41,7 @@ rule tokenize = parse
 | '-' { MINUS }
 | '*' { TIMES }
 | '/' { DIVIDE }
+| '%' { MOD }
 | '&' { BIT_AND }
 | '|' { BIT_OR }
 | '!' { NOT }
