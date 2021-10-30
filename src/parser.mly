@@ -23,7 +23,9 @@
 %token NEW DELETE
 /* identifiers */
 %token <string> ID
-/* end of file*/
+/* entry of program */
+%token MAIN
+/* end of file */
 %token EOF
 
 %left SEMMI
@@ -73,7 +75,7 @@ type:
 | GRAPH       {}
 
 main:
-  INT "main" LPAREN RPAREN    {}
+  INT MAIN LPAREN RPAREN    {}
 
 expr:
   expr PLUS   expr            { Binop($1, Add, $3) }
