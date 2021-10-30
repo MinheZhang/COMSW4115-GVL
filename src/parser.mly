@@ -130,7 +130,7 @@ expr:
 | INTLIT                      { IntLit($1) }
 /* function call */
 | ID LPAREN args_opt RPAREN {}
-| LPAREN expr RPAREN          { $2 }
+| LPAREN expr RPAREN          { Expr($2) }
 
 id:
   ID                          {}
