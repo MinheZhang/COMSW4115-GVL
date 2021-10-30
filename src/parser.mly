@@ -8,9 +8,9 @@
 /* controal flow keywords*/
 %token IF ELSE WHILE FOR BREAK CONTINUE RETURN
 /* separators */
-%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMMI
+%token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI
 /* types */
-%token BOOL INT FLOAT CHAR STRUCT NODE EDGE GRAPH
+%token BOOL INT FLOAT CHAR STRING STRUCT NODE EDGE GRAPH
 /* reference */
 %token DOT
 /* constants */
@@ -23,12 +23,11 @@
 %token NEW DELETE
 /* identifiers */
 %token <string> ID
-/* entry of program */
-%token MAIN
 /* end of file */
 %token EOF
 
-%left SEMMI
+%nonassoc NOELSE
+%left SEMI
 %left IF THEN ELSE
 %left ASSIGN
 %left PLUS MINUS
@@ -41,30 +40,32 @@
 %%
 
 program:
-  vdclrs fdclrs main          {}
+  decls EOF {}
 
-vdclrs:
-  vdclr                       {}
-| vdclrs vdclr                {}
+decls:
+  /* nothing */ {}
+| decls vdecl {}
+| decls fdecl {}
 
-vdclr:
-  type ID SEMMI               {}
+fdecl:
+  typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE {}
 
-fdclrs:
-  fdclr                       {}
-| fdclrs fdclr {}
+formals_opt: 
+  /* nothing */ {}
+| formal_list {}
 
-fdclr:
-  type ID LPAREN arg_list RPAREN block {}
+formal_list:
+  typ ID {}
+| formal_list COMMA typ ID {}
 
-arg_list:
-  arg_dclr {}
-| arg_dclr COMMA arg_list {}
+vdecl_list:
+/* nothing */ {}
+| vdecl_list vdecl {}
 
-arg_dclr:
-  type ID {}
+vdecl: 
+  typ ID SEMI {}
 
-type:
+typ:
   BOOL        {}
 | INT         {}
 | FLOAT       {}
@@ -74,8 +75,32 @@ type:
 | EDGE        {}
 | GRAPH       {}
 
-main:
-  INT MAIN LPAREN RPAREN    {}
+/* statements */
+
+stmt_list:
+  /* nothing */ {}
+| stmt_list stmt {}
+
+stmt:
+  expr SEMI {}
+| RETURN expr_opt SEMI {}
+| LBRACE stmt_list RBRACE {}
+| IF LPAREN expr RPAREN stmt %prec NOELSE {}
+| IF LPAREN expr RPAREN stmt ELSE stmt {}
+| FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt {}
+| WHILE LPAREN expr RPAREN stmt {}
+
+expr_opt:
+  /* nothing */ {}
+| expr {}
+
+args_opt:
+  /* nothing */ {}
+| args_list {}
+
+args_list:
+  expr {}
+| args_list COMMA expr {}
 
 expr:
   expr PLUS   expr            { Binop($1, Add, $3) }
@@ -85,15 +110,5 @@ expr:
 | ID ASSIGN expr              { Assign($1, $3) }
 | INTLIT                      { IntLit($1) }
 | ID                          { Id($1) }
-
-block:
-  LBRACE stmts RBRACE {}
-
-stmts:
-  stmt {}
-| stmts stmt {}
-
-stmt:
-  expr SEMMI {}
-| vdclr {}
-| IF LPAREN expr RPAREN block {}
+/* function call */
+| ID LPAREN args_opt RPAREN {}
