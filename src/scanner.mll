@@ -18,7 +18,7 @@ rule tokenize = parse
 | '{' { LBRACE }
 | '}' { RBRACE }
 | ',' { COMMA }
-| ';' { SEMMI }
+| ';' { SEMI }
 (* COMMENTS *)
 | "//" { s_comment lexbuf }
 | "/*" { m_comment lexbuf }
@@ -59,6 +59,7 @@ rule tokenize = parse
 | "int" { INT }
 | "float" { FLOAT }
 | "char" { CHAR }
+| "string" {STRING}
 | "struct" { STRUCT }
 | "node" { NODE }
 | "edge" { EDGE }
