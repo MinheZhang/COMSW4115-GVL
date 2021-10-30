@@ -100,7 +100,7 @@ stmt:
 | BREAK SEMI                              { Break }
 | CONTINUE SEMI                           { Continue }
 | RETURN SEMI                             { Return }
-| RETURN LPAREN expr RPAREN SEMI          { Return($3) }
+| RETURN expr SEMI                        { Return $2 }
 
 expr_opt:
   /* nothing */ {}
