@@ -50,6 +50,7 @@ decls:
   /* nothing */ {}
 | decls vdecl {}
 | decls fdecl {}
+| decls sdecl {}
 
 fdecl:
   typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE {}
@@ -69,15 +70,19 @@ vdecl_list:
 vdecl: 
   typ ID SEMI {}
 
+sdecl:
+  STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
+
 typ:
   BOOL        {}
 | INT         {}
 | FLOAT       {}
 | CHAR        {}
-| STRUCT      {}
+| STRUCT ID   {}
 | NODE        {}
 | EDGE        {}
 | GRAPH       {}
+| typ LBRACKET RBRACKET {}
 
 /* statements */
 
@@ -120,9 +125,14 @@ expr:
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
 | NOT expr                    { Not($2) }
-| ID ASSIGN expr              { Assign($1, $3) }
+| id ASSIGN expr              { Assign($1, $3) }
+| id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
-| ID                          { Id($1) }
 /* function call */
 | ID LPAREN args_opt RPAREN {}
 | LPAREN expr RPAREN          { $2 }
+
+id:
+  ID                          {}
+| id DOT ID                   {}
+| id LBRACKET expr RBRACKET   {}
