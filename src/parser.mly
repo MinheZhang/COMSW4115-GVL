@@ -51,6 +51,7 @@ decls:
 | decls vdecl {}
 | decls fdecl {}
 | decls sdecl {}
+| decls adecl_assign {}
 
 fdecl:
   typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE {}
@@ -70,6 +71,9 @@ vdecl_list:
 vdecl: 
   typ ID SEMI {}
 
+adecl_assign:
+  typ ID ASSIGN array_lit {}
+
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
 
@@ -82,7 +86,7 @@ typ:
 | NODE        {}
 | EDGE        {}
 | GRAPH       {}
-| typ LBRACKET RBRACKET {}
+| typ LBRACKET expr RBRACKET {}
 
 /* statements */
 
@@ -138,3 +142,11 @@ id:
   ID                          {}
 | id DOT ID                   {}
 | id LBRACKET expr RBRACKET   {}
+
+array_lit:
+  LBRACE args_list RBRACE        {}
+| LBRACE array_lit_list RBRACE   {}
+
+array_lit_list:
+  array_lit                      {}
+| array_lit_list COMMA array_lit {}
