@@ -70,7 +70,6 @@ typ:
 | INT         {}
 | FLOAT       {}
 | CHAR        {}
-| STRUCT      {}
 | NODE        {}
 | EDGE        {}
 | GRAPH       {}
