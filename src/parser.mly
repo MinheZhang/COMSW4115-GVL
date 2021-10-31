@@ -72,7 +72,7 @@ vdecl:
   typ ID SEMI {}
 
 adecl_assign:
-  typ ID ASSIGN array_lit {}
+  typ ID ASSIGN array_lit SEMI {}
 
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
