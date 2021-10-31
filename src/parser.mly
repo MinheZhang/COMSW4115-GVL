@@ -5,6 +5,8 @@
 %token PLUS MINUS TIMES DIVIDE MOD
 /* operators: assignment */
 %token ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
+/* operators: graph */
+%token PLUSPLUS MINUSMINUS
 /* controal flow keywords*/
 %token IF ELSE WHILE FOR BREAK CONTINUE RETURN
 /* separators */
@@ -29,6 +31,7 @@
 %token EOF
 
 %nonassoc NOELSE
+%nonassoc PLUSPLUS MINUSMINUS
 %left SEMI
 %left IF THEN ELSE
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
@@ -127,6 +130,8 @@ expr:
 | expr TIMES  expr            { Binop($1, Mul, $3) }
 | expr DIVIDE expr            { Binop($1, Div, $3) }
 | expr MOD expr               { Binop($1, Mod, $3) }
+| expr PLUSPLUS expr          { }
+| expr MINUSMINUS expr        { }
 | expr EQ  expr               { Binop($1, Equal, $3) }
 | expr NEQ expr               { Binop($1, Neq, $3) }
 | expr LT expr                { Binop($1, Less, $3) }
