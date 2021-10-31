@@ -29,12 +29,12 @@
 %nonassoc NOELSE
 %left SEMI
 %left IF THEN ELSE
-%left ASSIGN
+%right ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
 %left OR
 %left AND
 %left EQ NEQ LT GT LEQ GEQ
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left TIMES DIVIDE MOD
 %right NOT
 
 %start program
@@ -118,6 +118,7 @@ expr:
 | expr MINUS  expr            { Binop($1, Sub, $3) }
 | expr TIMES  expr            { Binop($1, Mul, $3) }
 | expr DIVIDE expr            { Binop($1, Div, $3) }
+| expr MOD expr               { Binop($1, Mod, $3) }
 | expr EQ  expr               { Binop($1, Equal, $3) }
 | expr NEQ expr               { Binop($1, Neq, $3) }
 | expr LT expr                { Binop($1, Less, $3) }
@@ -126,12 +127,21 @@ expr:
 | expr GEQ expr               { Binop($1, Geq, $3) }
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
+| id PLUS_ASSIGN expr         {}
+| id MINUS_ASSIGN expr        {}
+| id DIVIDE_ASSIGN expr       {}
+| id TIMES_ASSIGN expr        {}
+| id MOD_ASSIGN expr          {}
+| MINUS expr %prec NOT        {}
 | NOT expr                    { Not($2) }
 | id ASSIGN expr              { Assign($1, $3) }
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
+| FLOATLIT                    { FloatLit($1) }
+| CHARLIT                     { CharLit($1) }
+| STRLIT                      { StrLit($1) }
 /* function call */
-| ID LPAREN args_opt RPAREN {}
+| ID LPAREN args_opt RPAREN   {}
 | LPAREN expr RPAREN          { Expr($2) }
 
 id:
