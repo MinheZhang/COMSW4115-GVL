@@ -11,6 +11,8 @@
 %token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI
 /* types */
 %token BOOL INT FLOAT CHAR STRING STRUCT NODE EDGE GRAPH
+/* node/edge extension */
+%token COLON
 /* reference */
 %token DOT
 /* constants */
@@ -76,6 +78,8 @@ adecl_assign:
 
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
+| STRUCT ID COLON NODE LBRACE vdecl_list RBRACE SEMI {}
+| STRUCT ID COLON EDGE LBRACE vdecl_list RBRACE SEMI {}
 
 typ:
   BOOL        {}

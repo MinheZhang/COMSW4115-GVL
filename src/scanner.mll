@@ -46,6 +46,7 @@ rule tokenize = parse
 | '|' { BIT_OR }
 | '!' { NOT }
 | '.' { DOT }
+| ':' { COLON }
 (* CONTROL FLOW KEYWORDS *)
 | "if" { IF }
 | "else" { ELSE }
