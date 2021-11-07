@@ -5,12 +5,16 @@
 %token PLUS MINUS TIMES DIVIDE MOD
 /* operators: assignment */
 %token ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
+/* operators: graph */
+%token PLUSPLUS MINUSMINUS
 /* controal flow keywords*/
 %token IF ELSE WHILE FOR BREAK CONTINUE RETURN
 /* separators */
 %token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI
 /* types */
 %token BOOL INT FLOAT CHAR STRING STRUCT NODE EDGE GRAPH
+/* node/edge extension */
+%token COLON
 /* reference */
 %token DOT
 /* constants */
@@ -27,6 +31,7 @@
 %token EOF
 
 %nonassoc NOELSE
+%nonassoc PLUSPLUS MINUSMINUS
 %left SEMI
 %left IF THEN ELSE
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
@@ -76,6 +81,8 @@ adecl_assign:
 
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
+| STRUCT ID COLON NODE LBRACE vdecl_list RBRACE SEMI {}
+| STRUCT ID COLON EDGE LBRACE vdecl_list RBRACE SEMI {}
 
 typ:
   BOOL        {}
@@ -123,6 +130,8 @@ expr:
 | expr TIMES  expr            { Binop($1, Mul, $3) }
 | expr DIVIDE expr            { Binop($1, Div, $3) }
 | expr MOD expr               { Binop($1, Mod, $3) }
+| expr PLUSPLUS expr          { }
+| expr MINUSMINUS expr        { }
 | expr EQ  expr               { Binop($1, Equal, $3) }
 | expr NEQ expr               { Binop($1, Neq, $3) }
 | expr LT expr                { Binop($1, Less, $3) }
