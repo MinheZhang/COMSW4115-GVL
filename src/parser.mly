@@ -44,7 +44,7 @@
 %%
 
 program:
-  decls EOF {}
+  decls EOF { }
 
 decls:
   /* nothing */ {}
@@ -68,20 +68,20 @@ vdecl_list:
 | vdecl_list vdecl {}
 
 vdecl: 
-  typ ID SEMI {}
+  typ ID SEMI { ($1, $2) }
 
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
 
 typ:
-  BOOL        {}
-| INT         {}
-| FLOAT       {}
-| CHAR        {}
-| STRUCT ID   {}
-| NODE        {}
-| EDGE        {}
-| GRAPH       {}
+  BOOL        { Bool }
+| INT         { Int }
+| FLOAT       { Float }
+| CHAR        { Char }
+| STRUCT ID   { StructID }
+| NODE        { Node }
+| EDGE        { Edge }
+| GRAPH       { Graph }
 | typ LBRACKET RBRACKET {}
 
 /* statements */
@@ -99,8 +99,7 @@ stmt:
 | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
 | BREAK SEMI                              { Break }
 | CONTINUE SEMI                           { Continue }
-| RETURN SEMI                             { Return }
-| RETURN expr SEMI                        { Return $2 }
+| RETURN expr_opt SEMI                    { Return $2 }
 
 expr_opt:
   /* nothing */ {}
@@ -127,7 +126,8 @@ expr:
 | expr GEQ expr               { Binop($1, Geq, $3) }
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
-| NOT expr                    { Not($2) }
+| MINUS expr %prec NOT        { Unop(Neg, $2) }                 
+| NOT expr                    { Unop(Not, $2) }
 | id ASSIGN expr              { Assign($1, $3) }
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
