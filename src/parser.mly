@@ -46,7 +46,7 @@
 %%
 
 program:
-  decls EOF {}
+  decls EOF { }
 
 decls:
   /* nothing */ {}
@@ -76,6 +76,7 @@ vdecl:
   typ ID SEMI {}
 | typ ID ASSIGN expr SEMI {}
 
+
 // Array declaration and assignment.
 adecl_assign:
   typ ID ASSIGN array_lit SEMI {}
@@ -88,16 +89,17 @@ sdecl:
 | STRUCT ID COLON EDGE LBRACE vdecl_list RBRACE SEMI {}
 
 typ:
-  BOOL        {}
-| INT         {}
-| FLOAT       {}
-| CHAR        {}
+  BOOL        { Bool }
+| INT         { Int }
+| FLOAT       { Float }
+| CHAR        { Char }
 | STRING      {}
-| STRUCT ID   {}
-| NODE        {}
-| EDGE        {}
-| GRAPH       {}
+| STRUCT ID   { StructID }
+| NODE        { Node }
+| EDGE        { Edge }
+| GRAPH       { Graph }
 | typ LBRACKET expr RBRACKET {}
+
 
 /* statements */
 
@@ -115,7 +117,8 @@ stmt:
 | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
 | BREAK SEMI                              { Break }
 | CONTINUE SEMI                           { Continue }
-| RETURN expr SEMI                        { Return($2) }
+| RETURN expr SEMI                    { Return ($2) }
+
 
 expr_opt:
   /* nothing */ {}
@@ -145,6 +148,8 @@ expr:
 | expr GEQ expr               { Binop($1, Geq, $3) }
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
+| MINUS expr %prec NOT        { Unop(Neg, $2) }                 
+| NOT expr                    { Unop(Not, $2) }
 | id ASSIGN expr              { Assign($1, $3) }
 | id PLUS_ASSIGN expr         {}
 | id MINUS_ASSIGN expr        {}
