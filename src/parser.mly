@@ -156,8 +156,6 @@ expr:
 | id DIVIDE_ASSIGN expr       {}
 | id TIMES_ASSIGN expr        {}
 | id MOD_ASSIGN expr          {}
-| MINUS expr %prec NOT        {}
-| NOT expr                    { Not($2) }
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
 | BOOLLIT                     { BoolLit($1) }
