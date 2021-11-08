@@ -98,7 +98,7 @@ typ:
 | NODE        { Node }
 | EDGE        { Edge }
 | GRAPH       { Graph }
-| typ LBRACKET RBRACKET {}
+| typ LBRACKET expr RBRACKET {}
 
 
 /* statements */
