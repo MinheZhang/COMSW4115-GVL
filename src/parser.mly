@@ -18,13 +18,11 @@
 /* reference */
 %token DOT
 /* constants */
-%token TRUE FALSE
+%token <bool> BOOLLIT
 %token <int> INTLIT
 %token <float> FLOATLIT
 %token <string> STRLIT
 %token <char> CHARLIT
-/* memory */
-%token NEW DELETE
 /* identifiers */
 %token <string> ID
 /* end of file */
@@ -32,8 +30,7 @@
 
 %nonassoc NOELSE
 %nonassoc PLUSPLUS MINUSMINUS
-%left SEMI
-%left IF THEN ELSE
+%left ELSE
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
 %left OR
 %left AND
@@ -49,17 +46,19 @@
 %%
 
 program:
-  decls EOF {}
+  decls EOF { }
 
 decls:
   /* nothing */ {}
 | decls vdecl {}
 | decls fdecl {}
+// struct declaration.
 | decls sdecl {}
+// array declaration.
 | decls adecl_assign {}
 
 fdecl:
-  typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE {}
+  typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE {}
 
 formals_opt: 
   /* nothing */ {}
@@ -75,25 +74,32 @@ vdecl_list:
 
 vdecl: 
   typ ID SEMI {}
+| typ ID ASSIGN expr SEMI {}
 
+
+// Array declaration and assignment.
 adecl_assign:
   typ ID ASSIGN array_lit SEMI {}
 
+// Structure declaration and assignment.
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE SEMI {}
+  // Inheritance of node and edge using struct.
 | STRUCT ID COLON NODE LBRACE vdecl_list RBRACE SEMI {}
 | STRUCT ID COLON EDGE LBRACE vdecl_list RBRACE SEMI {}
 
 typ:
-  BOOL        {}
-| INT         {}
-| FLOAT       {}
-| CHAR        {}
-| STRUCT ID   {}
-| NODE        {}
-| EDGE        {}
-| GRAPH       {}
+  BOOL        { Bool }
+| INT         { Int }
+| FLOAT       { Float }
+| CHAR        { Char }
+| STRING      {}
+| STRUCT ID   { StructID }
+| NODE        { Node }
+| EDGE        { Edge }
+| GRAPH       { Graph }
 | typ LBRACKET expr RBRACKET {}
+
 
 /* statements */
 
@@ -103,6 +109,7 @@ stmt_list:
 
 stmt:
   expr SEMI                               { Expr ($1) }
+| vdecl                                   {  }
 | LBRACE stmt_list RBRACE                 { Expr($2) }
 | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3,$5) }
 | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -110,7 +117,8 @@ stmt:
 | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
 | BREAK SEMI                              { Break }
 | CONTINUE SEMI                           { Continue }
-| RETURN expr SEMI                        { Return($2) }
+| RETURN expr SEMI                    { Return ($2) }
+
 
 expr_opt:
   /* nothing */ {}
@@ -140,6 +148,9 @@ expr:
 | expr GEQ expr               { Binop($1, Geq, $3) }
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
+| MINUS expr %prec NOT        { Unop(Neg, $2) }                 
+| NOT expr                    { Unop(Not, $2) }
+| id ASSIGN expr              { Assign($1, $3) }
 | id PLUS_ASSIGN expr         {}
 | id MINUS_ASSIGN expr        {}
 | id DIVIDE_ASSIGN expr       {}
@@ -147,23 +158,27 @@ expr:
 | id MOD_ASSIGN expr          {}
 | MINUS expr %prec NOT        {}
 | NOT expr                    { Not($2) }
-| id ASSIGN expr              { Assign($1, $3) }
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
+| BOOLLIT                     { BoolLit($1) }
 | FLOATLIT                    { FloatLit($1) }
 | CHARLIT                     { CharLit($1) }
 | STRLIT                      { StrLit($1) }
-/* function call */
+  /* function call */
 | ID LPAREN args_opt RPAREN   {}
+  // Primary expression
 | LPAREN expr RPAREN          { Expr($2) }
 
 id:
   ID                          {}
 | id DOT ID                   {}
+  // Array 
 | id LBRACKET expr RBRACKET   {}
 
 array_lit:
+  // {1, 2, 3}
   LBRACE args_list RBRACE        {}
+  // {{1, 2}, {3, 4}}
 | LBRACE array_lit_list RBRACE   {}
 
 array_lit_list:

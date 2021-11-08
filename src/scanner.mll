@@ -68,8 +68,8 @@ rule tokenize = parse
 | "edge" { EDGE }
 | "graph" { GRAPH }
 (* CONSTANTS *)
-| "true" { TRUE }
-| "false" { FALSE }
+| "true" { BOOLLIT(True) }
+| "false" { BOOLLIT(False) }
 | digit+ as lxm { INTLIT(int_of_string lxm) }
 | (digit+) '.' (digit+) as lxm { FLOATLIT(float_of_string lxm) }
 | '"' { STRLIT(string_const "" lexbuf) }
@@ -79,9 +79,6 @@ rule tokenize = parse
 | ''' "\\n" ''' { CHARLIT('\n') }
 | ''' "\\t" ''' { CHARLIT('\t') }
 | ''' "\\r" ''' { CHARLIT('\r') }
-(* MEMORY *)
-| "new" { NEW }
-| "delete" { DELETE }
 (* IDENTIFIERS *)
 | letter (letter | digit | '_')* as id { ID(id) }
 (* EOF *)
