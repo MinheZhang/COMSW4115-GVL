@@ -117,7 +117,7 @@ stmt:
 | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
 | BREAK SEMI                              { Break }
 | CONTINUE SEMI                           { Continue }
-| RETURN expr_opt SEMI                    { Return $2 }
+| RETURN expr SEMI                    { Return ($2) }
 
 
 expr_opt:
