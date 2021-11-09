@@ -42,8 +42,8 @@ rule tokenize = parse
 | '*' { TIMES }
 | '/' { DIVIDE }
 | '%' { MOD }
-| '&' { BIT_AND }
-| '|' { BIT_OR }
+(*| '&' { BIT_AND }
+| '|' { BIT_OR }*)
 | '!' { NOT }
 | '.' { DOT }
 | ':' { COLON }
@@ -68,8 +68,8 @@ rule tokenize = parse
 | "edge" { EDGE }
 | "graph" { GRAPH }
 (* CONSTANTS *)
-| "true" { BOOLLIT(True) }
-| "false" { BOOLLIT(False) }
+| "true" { BOOLLIT(true) }
+| "false" { BOOLLIT(false) }
 | digit+ as lxm { INTLIT(int_of_string lxm) }
 | (digit+) '.' (digit+) as lxm { FLOATLIT(float_of_string lxm) }
 | '"' { STRLIT(string_const "" lexbuf) }
