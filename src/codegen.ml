@@ -10,17 +10,11 @@ let translate (globals, functions) =
 	we will generate code *)
 	let the_module = L.create_module context "GVL" in
 
-	let i32_t      = L.i32_type    context
-  and i8_t       = L.i8_type     context in
+	let i32_t      = L.i32_type    context in
 
 	let ltype_of_typ = function
 	    A.Int -> i32_t
 	in
-
-  let printf_t : L.lltype = 
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let printf_func : L.llvalue = 
-      L.declare_function "printf" printf_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -37,8 +31,6 @@ let translate (globals, functions) =
 	  (* TODO *)
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
-
-		let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
 
 	  let rec expr builder ((_, e) : sexpr) = match e with
 	      SBinop (e1, op, e2) ->
@@ -79,10 +71,7 @@ let translate (globals, functions) =
 
     let rec stmt builder = function
 				SBlock sl -> List.fold_left stmt builder sl
-      | SExpr e -> (*ignore(expr builder e); builder*)
-          let e' = expr builder e in
-            L.build_call printf_func [| int_format_str ; (e') |] "printf" builder ;
-          builder
+      | SExpr e -> ignore(expr builder e); builder
     in
 
     let builder = stmt builder (SBlock fdecl.sbody) in
