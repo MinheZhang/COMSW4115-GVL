@@ -46,36 +46,44 @@
 %%
 
 program:
-  decls EOF {}
+  decls EOF { $1 }
 
 decls:
-  /* nothing */ {}
-| decls vdecl {}
-| decls fdecl {}
+  /* nothing */ { ([], []) }
+| decls vdecl { (($2 :: fst $1), snd $1) }
+| decls fdecl { (fst $1, ($2 :: snd $1)) }
+// TODO
 // struct declaration.
-| decls sdecl {}
+//| decls sdecl {}
 // array declaration.
-| decls adecl_assign {}
+//| decls adecl_assign {}
 
 fdecl:
-  typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE {}
+  typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
+     { { typ = $1;
+   fname = $2;
+   formals = List.rev $4;
+   body = List.rev $7 } }
 
 formals_opt: 
-  /* nothing */ {}
-| formal_list {}
+  /* nothing */ { [] }
+| formal_list { $1 }
 
 formal_list:
-  typ ID {}
-| formal_list COMMA typ ID {}
+  typ ID { [($1, $2)] }
+| formal_list COMMA typ ID { ($3, $4) :: $1 }
 
-vdecl_list:
-/* nothing */ {}
-| vdecl_list vdecl {}
+// TODO in struct
+// vdecl_list:
+// /* nothing */ { [] }
+// | vdecl_list vdecl { $2 :: $1 }
 
 vdecl: 
-  typ ID SEMI {}
-| typ ID ASSIGN expr SEMI {}
+  typ ID SEMI { ($1, $2) }
+| typ ID ASSIGN expr SEMI { ($1, $2) }
 
+// TODO
+/*
 // Array declaration and assignment.
 adecl_assign:
   typ ID ASSIGN array_lit SEMI {}
@@ -86,30 +94,32 @@ sdecl:
   // Inheritance of node and edge using struct.
 | STRUCT ID COLON NODE LBRACE vdecl_list RBRACE SEMI {}
 | STRUCT ID COLON EDGE LBRACE vdecl_list RBRACE SEMI {}
+*/
 
 typ:
-  BOOL        {}
-| INT         {}
-| FLOAT       {}
-| CHAR        {}
-| STRING      {}
-| STRUCT ID   {}
-| NODE        {}
-| EDGE        {}
-| GRAPH       {}
-| typ LBRACKET expr RBRACKET {}
+  BOOL        { Bool }
+| INT         { Int }
+| FLOAT       { Float }
+| CHAR        { Char }
+| STRING      { String }
+| STRUCT ID   { StructID }
+| NODE        { Node }
+| EDGE        { Edge }
+| GRAPH       { Graph }
+//| typ LBRACKET expr RBRACKET {}  // TODO
+
 
 /* statements */
 
 stmt_list:
-  /* nothing */ {}
-| stmt_list stmt {}
+  /* nothing */  { [] }
+| stmt_list stmt { $2 :: $1 }
 
 stmt:
   expr SEMI                               { Expr ($1) }
-| vdecl                                   {  }
-| LBRACE stmt_list RBRACE                 { Expr($2) }
-| IF LPAREN expr RPAREN stmt %prec NOELSE { If($3,$5) }
+| vdecl                                   { Vdecl($1) }
+| LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
+| IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
 | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
 | FOR LPAREN expr_opt SEMI expr_opt SEMI expr_opt RPAREN stmt { For($3, $5, $7, $9) }
 | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
@@ -117,17 +127,18 @@ stmt:
 | CONTINUE SEMI                           { Continue }
 | RETURN expr SEMI                        { Return($2) }
 
+
 expr_opt:
-  /* nothing */ {}
-| expr {}
+  /* nothing */ { Noexpr }
+| expr { $1 }
 
 args_opt:
-  /* nothing */ {}
-| args_list {}
+  /* nothing */ { [] }
+| args_list { List.rev $1 }
 
 args_list:
-  expr {}
-| args_list COMMA expr {}
+  expr { [$1] }
+| args_list COMMA expr { $3 :: $1 }
 
 expr:
   expr PLUS   expr            { Binop($1, Add, $3) }
@@ -135,8 +146,8 @@ expr:
 | expr TIMES  expr            { Binop($1, Mul, $3) }
 | expr DIVIDE expr            { Binop($1, Div, $3) }
 | expr MOD expr               { Binop($1, Mod, $3) }
-| expr PLUSPLUS expr          { }
-| expr MINUSMINUS expr        { }
+//| expr PLUSPLUS expr          { }  // TODO
+//| expr MINUSMINUS expr        { }
 | expr EQ  expr               { Binop($1, Equal, $3) }
 | expr NEQ expr               { Binop($1, Neq, $3) }
 | expr LT expr                { Binop($1, Less, $3) }
@@ -145,31 +156,33 @@ expr:
 | expr GEQ expr               { Binop($1, Geq, $3) }
 | expr AND expr               { Binop($1, And, $3) }
 | expr OR expr                { Binop($1, Or, $3) }
+| MINUS expr %prec NOT        { Unop(Neg, $2) }                 
+| NOT expr                    { Unop(Not, $2) }
 | id ASSIGN expr              { Assign($1, $3) }
-| id PLUS_ASSIGN expr         {}
+/*| id PLUS_ASSIGN expr         {}
 | id MINUS_ASSIGN expr        {}
 | id DIVIDE_ASSIGN expr       {}
 | id TIMES_ASSIGN expr        {}
-| id MOD_ASSIGN expr          {}
-| MINUS expr %prec NOT        {}
-| NOT expr                    { Not($2) }
+| id MOD_ASSIGN expr          {}*/ // TODO
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
-| BOOLLIT                     { BoolLit($1) }
+/*| BOOLLIT                     { BoolLit($1) }
 | FLOATLIT                    { FloatLit($1) }
 | CHARLIT                     { CharLit($1) }
-| STRLIT                      { StrLit($1) }
+| STRLIT                      { StrLit($1) }*/ //TODO
   /* function call */
-| ID LPAREN args_opt RPAREN   {}
+| ID LPAREN args_opt RPAREN   { Call($1, $3) }
   // Primary expression
-| LPAREN expr RPAREN          { Expr($2) }
+| LPAREN expr RPAREN          { $2 }
 
 id:
-  ID                          {}
-| id DOT ID                   {}
+  ID                          { $1 }
+//| id DOT ID                   {} // TODO
   // Array 
-| id LBRACKET expr RBRACKET   {}
+//| id LBRACKET expr RBRACKET   {} // TODO
 
+// TODO
+/*
 array_lit:
   // {1, 2, 3}
   LBRACE args_list RBRACE        {}
@@ -179,3 +192,4 @@ array_lit:
 array_lit_list:
   array_lit                      {}
 | array_lit_list COMMA array_lit {}
+*/
