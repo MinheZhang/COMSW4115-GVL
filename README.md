@@ -14,3 +14,17 @@ In terminal:
 ```
 ocamlyacc parser.mly
 ```
+### How to test Parser using menhir
+In terminal:
+```
+menhir --interpret --interpret-show-cst parser.mly
+INT ID LPAREN RPAREN LBRACE ID LPAREN LITERAL RPAREN SEMI RBRACE EOF
+```
+
+## AST
+### How to use AST Pretty Printing
+In terminal:
+```
+ocamlbuild -use-ocamlfind gvl.native -package llvm,llvm.analysis
+./gvl.native -a {test file name}.gvl
+```
