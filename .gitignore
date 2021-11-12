@@ -34,3 +34,9 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Docker file
+Dockerfile
+
+# Test files
+tests/
