@@ -14,3 +14,15 @@ In terminal:
 ```
 ocamlyacc parser.mly
 ```
+
+## Compile Command:
+
+### For Docker
+Build.
+```
+opam config exec -- ocamlbuild -use-ocamlfind gvl.native
+```
+Build clean.
+```
+opam config exec -- ocamlbuild -clean
+```
