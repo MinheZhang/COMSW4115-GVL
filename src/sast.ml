@@ -13,12 +13,13 @@ type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SVdecl of bind
+  | SReturn of sexpr
 
 type sfunc_decl = {
     styp : typ;
     sfname : string;
     sformals : bind list;
-    (* slocals : bind list; *)
+    slocals: bind list;
     sbody : sstmt list;
   }
 
