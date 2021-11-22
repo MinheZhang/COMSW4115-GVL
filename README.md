@@ -1,6 +1,23 @@
 # COMSW4115-GVL
 This is a course project of COMS W4115. A compiler of a graph visualization language written in Ocaml.
 
+## TODO List
+### Iteration 1
+- Condition Statement
+- Function Call (Argument)
+- Loop Statement
+
+### Iteration 2
+- Node
+- Edge
+- 1-D Array
+
+### Iteration 3
+- Visualization
+  
+### Iteration 4
+- Node & Edge Extension
+
 ## Scanner
 ### How to Compile Parser using Ocamllex
 In terminal:
@@ -36,4 +53,3 @@ opam config exec -- ocamlbuild -clean
 ## Testing
 `test-xxx.gvl` means the test file should pass.
 `fail-xxx.gvl` means the test file should fail.
-
