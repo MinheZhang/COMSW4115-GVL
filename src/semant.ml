@@ -79,7 +79,7 @@ let check (globals, functions) =
 		      let ty = match op with
 		        Add | Sub | Mul | Div | Mod
 		          when same && t1 = Int  -> Int
-          | Add | Sub | Mul | Div when same && t1 = Float 	-> Float
+		      | Add | Sub | Mul | Div when same && t1 = Float 	-> Float
 		      | Equal | Neq           when same              		-> Bool
 		      | Less | Leq | Greater | Geq
 		          when same && (t1 = Int || t1 = Float)         -> Bool
@@ -125,7 +125,7 @@ let check (globals, functions) =
 		  | FloatLit l 		-> (Float, SFloatLit l)
 		  | CharLit l 		-> (Char, SCharLit l)
 		  | StrLit l 			-> (String, SStrLit l)
-      | Noexpr     		-> (Int, SNoexpr)
+		  | Noexpr     		-> (Int, SNoexpr)
 		in
 
 		(* TODO stmt *)
