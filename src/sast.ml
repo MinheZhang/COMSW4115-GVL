@@ -8,17 +8,23 @@ and sx =
   | SCall of string * sexpr list
   | SId of string
   | SIntLit of int
+  | SBoolLit of bool
+  | SFloatLit of string
+  | SCharLit of char
+  | SStrLit of string
+  | SNoexpr
 
 type sstmt =
     SBlock of sstmt list
   | SExpr of sexpr
   | SVdecl of bind
+  | SReturn of sexpr
 
 type sfunc_decl = {
     styp : typ;
     sfname : string;
     sformals : bind list;
-    (* slocals : bind list; *)
+    slocals: bind list;
     sbody : sstmt list;
   }
 
@@ -32,11 +38,18 @@ let rec string_of_sexpr (t, e) =
         f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
     | SId(s) -> s
     | SIntLit(l) -> string_of_int l
+    | SBoolLit(true) -> "true"
+    | SBoolLit(false) -> "false"
+    | SFloatLit(l) -> l
+    | SStrLit(l) -> l
+    | SCharLit(l) -> Char.escaped l
+    | SNoexpr -> ""
                   ) ^ ")"
 
 let rec string_of_sstmt = function
     SExpr(expr) -> string_of_sexpr expr ^ ";\n"
   | SVdecl(b) -> string_of_bind b
+  | SReturn(expr) -> "return " ^ string_of_sexpr expr ^ ";\n";
   | _ -> raise (Failure ("sast stmt not implemented"))
 
 let string_of_sfdecl fdecl =

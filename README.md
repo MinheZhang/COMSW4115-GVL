@@ -14,3 +14,26 @@ In terminal:
 ```
 ocamlyacc parser.mly
 ```
+
+## Docker
+Invoke Docker
+```
+docker run --rm -it -v `pwd`:/home/microc -w=/home/microc columbiasedwards/plt
+```
+
+## Compile Command:
+
+### For Docker
+Build.
+```
+opam config exec -- ocamlbuild -use-ocamlfind gvl.native
+```
+Build clean.
+```
+opam config exec -- ocamlbuild -clean
+```
+
+## Testing
+`test-xxx.gvl` means the test file should pass.
+`fail-xxx.gvl` means the test file should fail.
+
