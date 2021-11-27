@@ -20,7 +20,7 @@
 /* constants */
 %token <bool> BOOLLIT
 %token <int> INTLIT
-%token <float> FLOATLIT
+%token <string> FLOATLIT
 %token <string> STRLIT
 %token <char> CHARLIT
 /* identifiers */
@@ -166,10 +166,10 @@ expr:
 | id MOD_ASSIGN expr          {}*/ // TODO
 | id                          { Id($1) }
 | INTLIT                      { IntLit($1) }
-/*| BOOLLIT                     { BoolLit($1) }
+| BOOLLIT                     { BoolLit($1) }
 | FLOATLIT                    { FloatLit($1) }
 | CHARLIT                     { CharLit($1) }
-| STRLIT                      { StrLit($1) }*/ //TODO
+| STRLIT                      { StrLit($1) }
   /* function call */
 | ID LPAREN args_opt RPAREN   { Call($1, $3) }
   // Primary expression

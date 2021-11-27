@@ -71,7 +71,7 @@ rule tokenize = parse
 | "true" { BOOLLIT(true) }
 | "false" { BOOLLIT(false) }
 | digit+ as lxm { INTLIT(int_of_string lxm) }
-| (digit+) '.' (digit+) as lxm { FLOATLIT(float_of_string lxm) }
+| (digit+) '.' (digit+) as lxm { FLOATLIT(lxm) }
 | '"' { STRLIT(string_const "" lexbuf) }
 (* CHAR CONSTANTS *)
 | ''' ((ascii_character | '"') as lxm) ''' { CHARLIT(lxm) }
