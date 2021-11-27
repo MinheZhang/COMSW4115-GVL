@@ -105,27 +105,27 @@ let check (globals, functions) =
             string_of_typ e_t ^ " in " ^ string_of_expr ex in
           let ty = if v_t = e_t then v_t else raise (Failure err) in
           (ty, SAssign(v, (e_t, e')))
-		  | Call(fname, args) as call ->
-		      let fd = find_func fname in
-		      let param_length = List.length fd.formals in
-		      if List.length args != param_length then
-		        raise (Failure ("expecting " ^ string_of_int param_length ^ 
-		                        " arguments in " ^ string_of_expr call))
-		      else let check_call (ft, _) e = 
-		        let (et, e') = check_expr e locals in 
-		        let err = "illegal argument found " ^ string_of_typ et ^
-		          " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
-		        in (check_assign ft et err, e')
-		      in 
-		      let args' = List.map2 check_call fd.formals args
-		      in (fd.typ, SCall(fname, args'))
-		  | Id s         	-> (type_of_identifier s locals, SId s)
-		  | IntLit l   		-> (Int, SIntLit l)
-		  | BoolLit l 		-> (Bool, SBoolLit l)
-		  | FloatLit l 		-> (Float, SFloatLit l)
-		  | CharLit l 		-> (Char, SCharLit l)
-		  | StrLit l 			-> (String, SStrLit l)
-		  | Noexpr     		-> (Int, SNoexpr)
+      | Call(fname, args) as call ->
+          let fd = find_func fname in
+          let param_length = List.length fd.formals in
+          if List.length args != param_length then
+            raise (Failure ("expecting " ^ string_of_int param_length ^ 
+                            " arguments in " ^ string_of_expr call))
+          else let check_call (ft, _) e = 
+            let (et, e') = check_expr e locals in 
+            let err = "illegal argument found " ^ string_of_typ et ^
+              " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+            in (check_assign ft et err, e')
+          in 
+          let args' = List.map2 check_call fd.formals args
+          in (fd.typ, SCall(fname, args'))
+      | Id s         	-> (type_of_identifier s locals, SId s)
+      | IntLit l   		-> (Int, SIntLit l)
+      | BoolLit l 		-> (Bool, SBoolLit l)
+      | FloatLit l 		-> (Float, SFloatLit l)
+      | CharLit l 		-> (Char, SCharLit l)
+      | StrLit l 			-> (String, SStrLit l)
+      | Noexpr     		-> (Int, SNoexpr)
 		in
 
 		(* TODO stmt *)
