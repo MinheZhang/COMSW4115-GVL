@@ -120,13 +120,13 @@ let check (globals, functions) =
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))
       | Id s         	-> (type_of_identifier s locals, SId s)
-      | IntLit l   		-> (Int, SIntLit l)
-      | BoolLit l 		-> (Bool, SBoolLit l)
-      | FloatLit l 		-> (Float, SFloatLit l)
-      | CharLit l 		-> (Char, SCharLit l)
-      | StrLit l 			-> (String, SStrLit l)
-      | Noexpr     		-> (Int, SNoexpr)
-		in
+      | IntLit l      -> (Int, SIntLit l)
+      | BoolLit l     -> (Bool, SBoolLit l)
+      | FloatLit l    -> (Float, SFloatLit l)
+      | CharLit l     -> (Char, SCharLit l)
+      | StrLit l      -> (String, SStrLit l)
+      | Noexpr        -> (Int, SNoexpr)
+    in
 
 		(* TODO stmt *)
 		let rec check_stmt (sstmt_list, locals) stmt = match stmt with

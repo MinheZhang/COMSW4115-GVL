@@ -151,11 +151,11 @@ let translate (globals, functions) =
       (* Id *)
 	    | SId s -> L.build_load (lookup s) s builder
       (* Lit *)
-	    | SIntLit i -> L.const_int i32_t i
+	    | SIntLit i   -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFloatLit l -> L.const_float_of_string float_t l
-      | SCharLit c -> L.const_int i8_t (Char.code c)
-      | SStrLit s -> L.build_global_stringptr s "fmt" builder
+      | SCharLit c  -> L.const_int i8_t (Char.code c)
+      | SStrLit s   -> L.build_global_stringptr s "fmt" builder
       | SNoexpr     -> L.const_int i32_t 0
 	  in
 
