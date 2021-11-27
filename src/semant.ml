@@ -4,7 +4,51 @@ open Sast
 module StringMap = Map.Make(String)
 
 let check (globals, functions) =
+	(* Collect function declarations for built-in functions: no bodies *)
+	(* TODO No locals ? *)
+  let built_in_decls = 
+    let add_bind map (name, ty) = StringMap.add name {
+      typ = Int;
+      fname = name; 
+      formals = [(ty, "x")];
+      body = [] } map
+    in List.fold_left add_bind StringMap.empty [ ("printi", Int);
+			                         ("printb", Bool);
+			                         ("printf", Float);
+			                         ("printc", Char);
+			                         ("prints", String) ]
+  in
+
+  (* Add function name to symbol table *)
+  let add_func map fd = 
+    let built_in_err = "redefinition of built-in function '" ^ fd.fname ^ "'"
+    and dup_err = "redefinition of function '" ^ fd.fname ^ "'"
+    and make_err er = raise (Failure er)
+    and n = fd.fname (* Name of the function *)
+    in match fd with (* No duplicate functions or redefinitions of built-ins *)
+         _ when StringMap.mem n built_in_decls -> make_err built_in_err
+       | _ when StringMap.mem n map -> make_err dup_err  
+       | _ ->  StringMap.add n fd map 
+  in
+
+  (* Collect all function names into one symbol table *)
+  let function_decls = List.fold_left add_func built_in_decls functions
+  in
+
+  (* Return a function from our symbol table *)
+  let find_func s = 
+    try StringMap.find s function_decls
+    with Not_found -> raise (Failure ("unrecognized function " ^ s))
+  in
+
+  let _ = find_func "main" in (* Ensure "main" is defined *)
+
 	let check_function func =
+    (* Raise an exception if the given rvalue type cannot be assigned to
+       the given lvalue type *)
+    let check_assign lvaluet rvaluet err =
+       if lvaluet = rvaluet then lvaluet else raise (Failure err)
+    in
 
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
@@ -60,10 +104,27 @@ let check (globals, functions) =
             string_of_typ e_t ^ " in " ^ string_of_expr ex in
           let ty = if v_t = e_t then v_t else raise (Failure err) in
           (ty, SAssign(v, (e_t, e')))
-      | Call(fname, args) as call -> (* TODO *)
-          raise (Failure ("semant expr Call not implemented"))
-		  | Id s -> (type_of_identifier s locals, SId s)
-		  | IntLit l -> (Int, SIntLit l)
+      | Call(fname, args) as call ->
+          let fd = find_func fname in
+          let param_length = List.length fd.formals in
+          if List.length args != param_length then
+            raise (Failure ("expecting " ^ string_of_int param_length ^ 
+                            " arguments in " ^ string_of_expr call))
+          else let check_call (ft, _) e = 
+            let (et, e') = check_expr e locals in 
+            let err = "illegal argument found " ^ string_of_typ et ^
+              " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
+            in (check_assign ft et err, e')
+          in 
+          let args' = List.map2 check_call fd.formals args
+          in (fd.typ, SCall(fname, args'))
+		  | Id s         	-> (type_of_identifier s locals, SId s)
+		  | IntLit l   		-> (Int, SIntLit l)
+		  | BoolLit l 		-> (Bool, SBoolLit l)
+		  | FloatLit l 		-> (Float, SFloatLit l)
+		  | CharLit l 		-> (Char, SCharLit l)
+		  | StrLit l 			-> (String, SStrLit l)
+      | Noexpr     		-> (Int, SNoexpr)
 		in
 
 		(* TODO stmt *)

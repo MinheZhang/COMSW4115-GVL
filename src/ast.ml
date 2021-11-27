@@ -13,6 +13,10 @@ type expr =
 |   Assign of string * expr
 |   Id of string
 |   IntLit of int
+|   BoolLit of bool
+|   FloatLit of string
+|   CharLit of char
+|   StrLit of string
     (* Function Call *)
 |   Call of string * expr list
 |   Noexpr
@@ -61,6 +65,7 @@ let string_of_typ = function
 |   Int -> "int"
 |   Float -> "float"
 |   Char -> "char"
+|   String -> "string"
 |   StructID -> "struct" (* *)
 |   Node -> "node"
 |   Edge -> "edge"
@@ -78,7 +83,12 @@ let rec string_of_expr = function
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
 |   Id(s) -> s
 |   IntLit(l) -> string_of_int l
-    (* Function *)
+|   FloatLit(l) -> l
+|   StrLit(l) -> l
+|   BoolLit(true) -> "true"
+|   BoolLit(false) -> "false"
+|   CharLit(l) -> Char.escaped l
+|   Noexpr -> ""
 
 let rec string_of_stmt = function
     Expr(e) -> string_of_expr e ^ ";\n"
