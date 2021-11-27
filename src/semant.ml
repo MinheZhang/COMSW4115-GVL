@@ -79,10 +79,11 @@ let check (globals, functions) =
 		      let ty = match op with
 		        Add | Sub | Mul | Div | Mod
 		          when same && t1 = Int  -> Int
-		      | Equal | Neq           when same              -> Bool
+          | Add | Sub | Mul | Div when same && t1 = Float 	-> Float
+		      | Equal | Neq           when same              		-> Bool
 		      | Less | Leq | Greater | Geq
-		          when same && (t1 = Int)                    -> Bool
-		      | And | Or              when same && t1 = Bool -> Bool
+		          when same && (t1 = Int || t1 = Float)         -> Bool
+		      | And | Or              when same && t1 = Bool 		-> Bool
 		      | _ -> raise (
 		           Failure ("illegal binary operator " ^
 	                       string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
