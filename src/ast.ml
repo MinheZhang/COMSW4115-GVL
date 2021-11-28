@@ -28,15 +28,12 @@ type stmt =
 |   If of expr * stmt * stmt
 |   For of expr * expr * expr * stmt
 |   While of expr * stmt
-|   Break
-|   Continue
 |   Return of expr
 
 type func_decl = {
     typ : typ;
     fname : string;
     formals : bind list;
-    (*locals : bind list;*) (*TODO*)
     body : stmt list;
   }
 
@@ -91,16 +88,17 @@ let rec string_of_expr = function
 |   Noexpr -> ""
 
 let rec string_of_stmt = function
-    Expr(e) -> string_of_expr e ^ ";\n"
-(*|   If(e, s) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s*)
-|   Vdecl(b) -> string_of_bind b
-|   For(e1, e2, e3, s) ->
+    Block(stmts) ->
+      "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
+  | Expr(e) -> string_of_expr e ^ ";\n"
+  | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
+  | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
+      string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2|   Vdecl(b) -> string_of_bind b
+  | For(e1, e2, e3, s) ->
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
-|   While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
-|   Return(e) -> "return " ^ string_of_expr e ^ ";\n"
-(* Break *)
-(* Continue *)
+  | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+  | Return(e) -> "return " ^ string_of_expr e ^ ";\n"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
@@ -109,11 +107,10 @@ let string_of_fdecl fdecl =
   string_of_typ fdecl.typ ^ " " ^
   fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ")\n{\n" ^
-  (*String.concat "" (List.map string_of_vdecl fdecl.locals) ^*)(*TODO*)
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 
 (* string_of_program *)
 let string_of_program (vars, funcs) =
-  (*String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^*) (*TODO*)
+  String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs)

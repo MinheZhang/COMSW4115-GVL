@@ -5,7 +5,6 @@ module StringMap = Map.Make(String)
 
 let check (globals, functions) =
 	(* Collect function declarations for built-in functions: no bodies *)
-	(* TODO No locals ? *)
   let built_in_decls = 
     let add_bind map (name, ty) = StringMap.add name {
       typ = Int;
@@ -55,6 +54,9 @@ let check (globals, functions) =
 	                StringMap.empty (globals @ func.formals)
     in
 
+    (* let find_in_locals s' locals' = match locals' with
+      l :: ls -> try StringMap.find s' l
+                  with Not_found -> find_in_locals s' ls *)
 	  (* Return a variable from local symbol table *)
 	  (* let type_of_identifier s =
 	    try StringMap.find s symbols
@@ -62,10 +64,13 @@ let check (globals, functions) =
 	  in *)
     let type_of_identifier s locals =
 	    try StringMap.find s symbols
-	    with Not_found -> 
-        try StringMap.find s locals
-        with Not_found -> 
-          raise (Failure ("undeclared identifier " ^ s))
+	    with Not_found ->
+        let rec find_in_locals s' locals' =
+          match locals' with
+            [] -> raise (Failure ("undeclared identifier " ^ s'))
+          | l::ls -> try StringMap.find s' l
+                      with Not_found -> find_in_locals s' ls
+        in find_in_locals s locals
 	  in
 
 		(* Return a semantically-checked expression, i.e., with a type *)
@@ -128,8 +133,14 @@ let check (globals, functions) =
       | Noexpr        -> (Int, SNoexpr)
     in
 
+    let check_bool_expr e locals = 
+      let (t', e') = check_expr e locals
+      and err = "expected Boolean expression in " ^ string_of_expr e
+      in if t' != Bool then raise (Failure err) else (t', e') 
+    in
+
 		(* TODO stmt *)
-		let rec check_stmt (sstmt_list, locals) stmt = match stmt with
+		(* let rec check_stmt (sstmt_list, locals) stmt = match stmt with
 		    Expr e -> (SExpr (check_expr e locals) :: sstmt_list, locals)
 		  | Vdecl (t, n) -> 
         if StringMap.mem n symbols 
@@ -142,14 +153,59 @@ let check (globals, functions) =
         else raise (Failure ("return gives " ^ string_of_typ t 
                               ^ " expected " ^ string_of_typ func.typ 
                               ^ " in " ^ string_of_expr e))
-		  | _ -> raise (Failure ("semant stmt not implemented"))
+		  | _ -> raise (Failure ("semant stmt not implemented")) *)
+    let rec check_stmt (sstmt_list, all_locals, curr_locals) stmt = match stmt with
+        Expr e -> (SExpr (check_expr e curr_locals) :: sstmt_list, all_locals, curr_locals)
+      | Vdecl (t, n) ->
+        if StringMap.mem n symbols
+          then raise (Failure ("redefinition of " ^ "'" ^ n ^ "'"))
+          else if StringMap.mem n all_locals
+                then raise (Failure ("redefinition of " ^ "'" ^ n ^ "'"))
+                else (SVdecl (t, n) :: sstmt_list, 
+                      StringMap.add n t all_locals,
+                      (StringMap.add n t (List.hd curr_locals)) :: List.tl curr_locals)
+      | Return e -> let (t, e') = check_expr e curr_locals in
+        if t = func.typ then (SReturn (t, e') :: sstmt_list, all_locals, curr_locals)
+        else raise (Failure ("return gives " ^ string_of_typ t
+                              ^ " expected " ^ string_of_typ func.typ 
+                              ^ " in " ^ string_of_expr e))
+      | Block sl ->
+          let rec check_stmt_list = function
+              Return _ :: _ -> raise (Failure "nothing may follow a return")
+            | s :: ss -> check_stmt_list ss
+            | [] -> () in
+          check_stmt_list sl;
+          let (blist, new_all_locals, _) =
+            List.fold_left check_stmt ([], all_locals, StringMap.empty :: curr_locals) sl
+          in
+          (SBlock(List.rev blist)::sstmt_list, new_all_locals, curr_locals)
+      | If(p, b1, b2) ->
+          let sp = check_bool_expr p curr_locals in
+          let (b1_sstmt_list, b1_all_locals, _) = check_stmt ([], all_locals, curr_locals) b1 in
+          let (b2_sstmt_list, b2_all_locals, _) = check_stmt ([], b1_all_locals, curr_locals) b2 in
+          (SIf(sp, List.hd b1_sstmt_list, List.hd b2_sstmt_list) :: sstmt_list, b2_all_locals, curr_locals)
+      | For(e1, e2, e3, st) ->
+        let (for_sstmt, new_all_locals, _) = check_stmt ([], all_locals, curr_locals) st in
+        (SFor(check_expr e1 curr_locals,
+              check_bool_expr e2 curr_locals,
+              check_expr e3 curr_locals,
+              List.hd for_sstmt) :: sstmt_list,
+          new_all_locals,
+          curr_locals)
+      | While(p, s) -> 
+          let (while_sstmt, new_all_locals, _) = check_stmt ([], all_locals, curr_locals) s in
+          (SWhile(check_bool_expr p curr_locals, List.hd while_sstmt) :: sstmt_list,
+            new_all_locals,
+            curr_locals)
+      | _ -> raise (Failure ("semant stmt not implemented"))
+
 	  in
 
     let slocals_map_to_list n t slocals_list =
       (t, n) :: slocals_list
     in
 
-    let (sbody, slocals_map) = List.fold_left check_stmt ([], StringMap.empty) func.body (* TODO *)
+    let (sbody, slocals_map, _) = List.fold_left check_stmt ([], StringMap.empty, [StringMap.empty]) func.body (* TODO *)
     in
 		{ styp = func.typ;
       sfname = func.fname;

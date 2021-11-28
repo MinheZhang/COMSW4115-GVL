@@ -11,13 +11,9 @@ let translate (globals, functions) =
 	let the_module = L.create_module context "GVL" in
 
 	let i32_t      = L.i32_type    context
-<<<<<<< HEAD
-  and i8_t       = L.i8_type     context in
-=======
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context in
->>>>>>> 9488abe95df29582e48d1843e0b3cc28abdc091f
 
 	let ltype_of_typ = function
 	    A.Int -> i32_t
@@ -174,6 +170,43 @@ let translate (globals, functions) =
       | SVdecl b -> builder (* TODO *)
       | SReturn e ->  ignore (L.build_ret (expr builder e) builder);
                       builder
+      | SIf (predicate, then_stmt, else_stmt) ->
+        let bool_val = expr builder predicate in
+    let merge_bb = L.append_block context "merge" the_function in
+          let build_br_merge = L.build_br merge_bb in (* partial function *)
+
+    let then_bb = L.append_block context "then" the_function in
+    add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+      build_br_merge;
+
+    let else_bb = L.append_block context "else" the_function in
+    add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+      build_br_merge;
+
+    ignore(L.build_cond_br bool_val then_bb else_bb builder);
+    L.builder_at_end context merge_bb
+
+      | SWhile (predicate, body) ->
+    let pred_bb = L.append_block context "while" the_function in
+    ignore(L.build_br pred_bb builder);
+
+    let body_bb = L.append_block context "while_body" the_function in
+    add_terminal (stmt (L.builder_at_end context body_bb) body)
+      (L.build_br pred_bb);
+
+    let pred_builder = L.builder_at_end context pred_bb in
+    let bool_val = expr pred_builder predicate in
+
+    let merge_bb = L.append_block context "merge" the_function in
+    ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
+    L.builder_at_end context merge_bb
+
+      (* Implement for loops as while loops *)
+      | SFor (e1, e2, e3, body) -> stmt builder
+      ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
+               
+
+
     in
 
     let builder = stmt builder (SBlock fdecl.sbody) in
