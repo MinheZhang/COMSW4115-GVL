@@ -70,11 +70,11 @@ let translate (globals, functions) =
           ignore (L.build_store p local builder);
           StringMap.add n local m 
   
-          (* Allocate space for any locally declared variables and add the
-          * resulting registers to our map *)
-          and add_local m (t, n) =
-            let local_var = L.build_alloca (ltype_of_typ t) n builder
-            in StringMap.add n local_var m 
+      (* Allocate space for any locally declared variables and add the
+      * resulting registers to our map *)
+      and add_local m (t, n) =
+        let local_var = L.build_alloca (ltype_of_typ t) n builder
+        in StringMap.add n local_var m 
       in
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
             (Array.to_list (L.params the_function)) 
@@ -170,6 +170,43 @@ let translate (globals, functions) =
       | SVdecl b -> builder (* TODO *)
       | SReturn e ->  ignore (L.build_ret (expr builder e) builder);
                       builder
+      | SIf (predicate, then_stmt, else_stmt) ->
+        let bool_val = expr builder predicate in
+    let merge_bb = L.append_block context "merge" the_function in
+          let build_br_merge = L.build_br merge_bb in (* partial function *)
+
+    let then_bb = L.append_block context "then" the_function in
+    add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+      build_br_merge;
+
+    let else_bb = L.append_block context "else" the_function in
+    add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+      build_br_merge;
+
+    ignore(L.build_cond_br bool_val then_bb else_bb builder);
+    L.builder_at_end context merge_bb
+
+      | SWhile (predicate, body) ->
+    let pred_bb = L.append_block context "while" the_function in
+    ignore(L.build_br pred_bb builder);
+
+    let body_bb = L.append_block context "while_body" the_function in
+    add_terminal (stmt (L.builder_at_end context body_bb) body)
+      (L.build_br pred_bb);
+
+    let pred_builder = L.builder_at_end context pred_bb in
+    let bool_val = expr pred_builder predicate in
+
+    let merge_bb = L.append_block context "merge" the_function in
+    ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
+    L.builder_at_end context merge_bb
+
+      (* Implement for loops as while loops *)
+      | SFor (e1, e2, e3, body) -> stmt builder
+      ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
+               
+
+
     in
 
     let builder = stmt builder (SBlock fdecl.sbody) in

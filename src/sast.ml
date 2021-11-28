@@ -1,3 +1,5 @@
+(* Semantically-checked Abstract Syntax Tree and functions for printing it *)
+
 open Ast
 
 type sexpr = typ * sx
@@ -19,6 +21,9 @@ type sstmt =
   | SExpr of sexpr
   | SVdecl of bind
   | SReturn of sexpr
+  | SIf of sexpr * sstmt * sstmt
+  | SFor of sexpr * sexpr * sexpr * sstmt
+  | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
     styp : typ;
@@ -27,6 +32,8 @@ type sfunc_decl = {
     slocals: bind list;
     sbody : sstmt list;
   }
+
+(* type sprogram = bind list * sfunc_decl list *)
 
 let rec string_of_sexpr (t, e) =
   "(" ^ string_of_typ t ^ " : " ^ (match e with
@@ -50,6 +57,14 @@ let rec string_of_sstmt = function
     SExpr(expr) -> string_of_sexpr expr ^ ";\n"
   | SVdecl(b) -> string_of_bind b
   | SReturn(expr) -> "return " ^ string_of_sexpr expr ^ ";\n";
+  | SIf(e, s, SBlock([])) ->
+      "if (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
+  | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
+      string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
+  | SFor(e1, e2, e3, s) ->
+      "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
+      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
+  | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
   | _ -> raise (Failure ("sast stmt not implemented"))
 
 let string_of_sfdecl fdecl =
@@ -60,5 +75,5 @@ let string_of_sfdecl fdecl =
   "}\n"
 
 let string_of_sprogram (vars, funcs) =
-  (* String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^ *)
+  String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_sfdecl funcs)    
