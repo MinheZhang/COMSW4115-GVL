@@ -1,0 +1,8 @@
+int main() {
+  if {
+    printi(1);
+  } else {
+    printi(0);
+  }
+  return 0;
+}
