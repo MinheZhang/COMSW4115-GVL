@@ -1,0 +1,16 @@
+int main() {
+  if (true) {
+    if (true) {
+      printi(11);
+    } else {
+      printi(10);
+    }
+  } else {
+    if (true) {
+      printi(01);
+    } else {
+      printi(10);
+    }
+  }
+  return 0;
+}
