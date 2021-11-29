@@ -3,9 +3,9 @@ This is a course project of COMS W4115. A compiler of a graph visualization lang
 
 ## TODO List
 ### Iteration 1
-- Condition Statement
-- Function Call (Argument)
-- Loop Statement
+- ~~Condition Statement~~
+- ~~Function Call (Argument)~~
+- ~~Loop Statement~~
 
 ### Iteration 2
 - Node
@@ -18,29 +18,31 @@ This is a course project of COMS W4115. A compiler of a graph visualization lang
 ### Iteration 4
 - Node & Edge Extension
 
-## Scanner
-### How to Compile Parser using Ocamllex
-In terminal:
+---
+## Useful Command
+
+### Compile Scanner
 ```
-ocamllex parser.mll
+ocamllex scanner.mll
 ```
 
-## Parser
-### How to Compile Parser using Ocamlyacc
-In terminal:
+### Compile Parser
 ```
 ocamlyacc parser.mly
 ```
 
-## Docker
+### Docker
 Invoke Docker
 ```
-docker run --rm -it -v `pwd`:/home/microc -w=/home/microc columbiasedwards/plt
+docker run --rm -it -v `pwd`:/home/gvl -w=/home/gvl columbiasedwards/plt
 ```
+- `--rm`: Automatically remove the container when it exits
+- `-it`: Interactive and pseudo terminal
+- `-v`: Mounts the current working directory into the container
+- `-w`: Let the command being executed inside the current working directory
+- `columbiasedwards/plt`: Name of repository
 
-## Compile Command:
-
-### For Docker
+### Compile GVL Compiler in Docker
 Build.
 ```
 opam config exec -- ocamlbuild -use-ocamlfind gvl.native
