@@ -89,12 +89,12 @@ rule tokenize = parse
 and s_comment = parse
   '\n' { tokenize lexbuf }
 | eof { EOF }
-| '_' { s_comment lexbuf }
+| _ { s_comment lexbuf }
 
 and m_comment = parse
   "*/" { tokenize lexbuf }
 | eof { raise (ScannerError "unterminated comment") }
-| '_' { m_comment lexbuf }
+| _ { m_comment lexbuf }
 
 and string_const result_str = parse
   '"' { result_str }

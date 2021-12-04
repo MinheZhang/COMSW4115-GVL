@@ -32,3 +32,13 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Clion build
+src/lib/CMakeLists.txt
+src/lib/cmake-build-debug/
+src/lib/.idea/
+
+# test
+src/testall.log
+src/*.diff
+src/*.err
