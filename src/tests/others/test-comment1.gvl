@@ -1,0 +1,9 @@
+int main() {
+    // comment
+    /*
+       multi-line
+       comment
+     */
+    prints("success");
+    return 0;
+}
