@@ -67,14 +67,73 @@ node *create_node(float x, float y, float radius, int r, int g, int b, void *ext
     return n;
 }
 
-void *node_get_extra(node *n) {
-    return n->extra;
-}
-
 int node_change_color(node *n, int r, int g, int b) {
     n->r = r;
     n->g = g;
     n->b = b;
+    return 0;
+}
+
+float get_node_x(node *n) {
+    return n->x;
+}
+
+float get_node_y(node *n) {
+    return n->y;
+}
+
+float get_node_radius(node *n) {
+    return n->radius;
+}
+
+int get_node_r(node *n) {
+    return n->r;
+}
+
+int get_node_g(node *n) {
+    return n->g;
+}
+
+int get_node_b(node *n) {
+    return n->b;
+}
+
+void *node_get_extra(node *n) {
+    return n->extra;
+}
+
+int set_node_x(node *n, float x) {
+    n->x = x;
+    return 0;
+}
+
+int set_node_y(node *n, float y) {
+    n->y = y;
+    return 0;
+}
+
+int set_node_radius(node *n, float radius) {
+    n->radius = radius;
+    return 0;
+}
+
+int set_node_r(node *n, int r) {
+    n->r = r;
+    return 0;
+}
+
+int set_node_g(node *n, int g) {
+    n->g = g;
+    return 0;
+}
+
+int set_node_b(node *n, int b) {
+    n->b = b;    
+    return 0;
+}
+
+int set_node_extra(node *n, void *extra) {
+    n->extra = extra;
     return 0;
 }
 
@@ -102,6 +161,62 @@ node *edge_get_end(edge *e) {
 int edge_change_color(edge *e, int r, int g, int b) {
     e->r = r;
     e->g = g;
+    e->b = b;
+    return 0;
+}
+
+// Get edge attributes.
+node *get_edge_start(edge *e) {
+    return e->start;
+}
+
+node *get_edge_end(edge *e) {
+    return e->end;
+}
+
+int get_edge_bold(edge *e) {
+    return e->bold;
+}
+
+int get_edge_r(edge *e) {
+    return e->r;
+}
+
+int get_edge_g(edge *e) {
+    return e->g;
+}
+
+int get_edge_b(edge *e) {
+    return e->b;
+}
+
+// Get edge attributes.
+int set_edge_start(edge *e, node *start) {
+    e->start = start;
+    return 0;
+}
+
+int set_edge_end(edge *e, node *end) {
+    e->end = end;
+    return 0;
+}
+
+int set_edge_bold(edge *e, int bold) {
+    e->bold = bold;
+    return 0;
+}
+
+int set_edge_r(edge *e, int r) {
+    e->r = r;
+    return 0;
+}
+
+int set_edge_g(edge *e, int g) {
+    e->g = g;
+    return 0;
+}
+
+int set_edge_b(edge *e, int b) {
     e->b = b;
     return 0;
 }
