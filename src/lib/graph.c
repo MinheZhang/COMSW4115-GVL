@@ -55,7 +55,7 @@ void print_graph(graph *g, int simple) {
 
 /******************************* node *******************************/
 
-node *create_node(float x, float y, float radius, int r, int g, int b, void *extra) {
+node *create_node(double x, double y, double radius, int r, int g, int b, void *extra) {
     node *n = malloc(sizeof(node));
     n->x = x;
     n->y = y;
@@ -67,22 +67,22 @@ node *create_node(float x, float y, float radius, int r, int g, int b, void *ext
     return n;
 }
 
-int node_change_color(node *n, int r, int g, int b) {
+int set_node_color(node *n, int r, int g, int b) {
     n->r = r;
     n->g = g;
     n->b = b;
     return 0;
 }
 
-float get_node_x(node *n) {
+double get_node_x(node *n) {
     return n->x;
 }
 
-float get_node_y(node *n) {
+double get_node_y(node *n) {
     return n->y;
 }
 
-float get_node_radius(node *n) {
+double get_node_radius(node *n) {
     return n->radius;
 }
 
@@ -98,21 +98,21 @@ int get_node_b(node *n) {
     return n->b;
 }
 
-void *node_get_extra(node *n) {
+void *get_node_extra(node *n) {
     return n->extra;
 }
 
-int set_node_x(node *n, float x) {
+int set_node_x(node *n, double x) {
     n->x = x;
     return 0;
 }
 
-int set_node_y(node *n, float y) {
+int set_node_y(node *n, double y) {
     n->y = y;
     return 0;
 }
 
-int set_node_radius(node *n, float radius) {
+int set_node_radius(node *n, double radius) {
     n->radius = radius;
     return 0;
 }
@@ -148,14 +148,6 @@ edge *create_edge(node *start, node *end, int bold, int r, int g, int b) {
     e->g = g;
     e->b = b;
     return e;
-}
-
-node *edge_get_start(edge *e) {
-    return e->start;
-}
-
-node *edge_get_end(edge *e) {
-    return e->end;
 }
 
 int edge_change_color(edge *e, int r, int g, int b) {

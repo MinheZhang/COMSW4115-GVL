@@ -1,5 +1,6 @@
 open Ast
 open Sast
+open Builtin
 
 module StringMap = Map.Make(String)
 
@@ -11,37 +12,8 @@ let check (globals, functions) =
       fname = name; 
       formals = formal_list;
       body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("printi", [(Int, "x")], Int);
-			                         ("printb", [(Bool, "x")], Int);
-			                         ("printf", [(Float, "x")], Int);
-			                         ("printc", [(Char, "x")], Int);
-			                         ("prints", [(String, "x")], Int);
-                               ("return_int_one", [], Int);
-                               ("create_node", [(Float, "x");
-                                                (Float, "y"); 
-                                                (Float, "radius");
-                                                (Int, "r");
-                                                (Int, "g");
-                                                (Int, "b");
-                                                (VoidPtr, "data")], Node);
-                               ("create_edge", [(Node, "start");
-                                                (Node, "end"); 
-                                                (Int, "bold");
-                                                (Int, "r");
-                                                (Int, "g");
-                                                (Int, "b")], Edge) ]
+    in List.fold_left add_bind StringMap.empty semant_built_in_funcs
   in
-    (* let add_bind map (name, ty) = StringMap.add name {
-      typ = Int;
-      fname = name; 
-      formals = [(ty, "x")];
-      body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("printi", Int);
-			                         ("printb", Bool);
-			                         ("printf", Float);
-			                         ("printc", Char);
-			                         ("prints", String) ]
-  in *)
 
   (* Add function name to symbol table *)
   let add_func map fd = 
