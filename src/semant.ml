@@ -23,7 +23,13 @@ let check (globals, functions) =
                                                 (Int, "r");
                                                 (Int, "g");
                                                 (Int, "b");
-                                                (VoidPtr, "data")], Node) ]
+                                                (VoidPtr, "data")], Node);
+                               ("create_edge", [(Node, "start");
+                                                (Node, "end"); 
+                                                (Int, "bold");
+                                                (Int, "r");
+                                                (Int, "g");
+                                                (Int, "b")], Edge) ]
   in
     (* let add_bind map (name, ty) = StringMap.add name {
       typ = Int;
@@ -116,7 +122,7 @@ let check (globals, functions) =
 		  | Unop(op, e) as ex ->
 		      let (t, e') = check_expr e locals in
 		      let ty = match op with
-		      | Neg when t = Int -> t (* TODO Float *)
+		      | Neg when (t = Int || t = Float) -> t (* TODO Float *)
 		      | Not when t = Bool -> t
 		      | _ -> raise (Failure ("illegal unary operator " ^ 
 	                                string_of_uop op ^ string_of_typ t ^
