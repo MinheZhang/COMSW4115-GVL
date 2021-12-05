@@ -6,6 +6,9 @@ module StringMap = Map.Make(String)
 
 let translate (globals, functions) =
 	let context = L.global_context () in
+  let llmem = L.MemoryBuffer.of_file "graph" in
+  let llm = Llvm_bitreader.parse_bitcode context llmem in
+
 	(* Create the LLVM compilation module into which
 	we will generate code *)
 	let the_module = L.create_module context "GVL" in
@@ -13,13 +16,24 @@ let translate (globals, functions) =
 	let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
-  and float_t    = L.double_type context in
+  and float_t    = L.double_type context
+  and node_t     = L.pointer_type (match L.type_by_name llm "struct.node_t" with
+                                              None -> raise (Failure "the node type is not defined.")
+                                            | Some x -> x)
+  and edge_t     = L.pointer_type (match L.type_by_name llm "struct.edge_t" with
+                                              None -> raise (Failure "the edge type is not defined.")
+                                            | Some x -> x)
+  and void_ptr_t = L.pointer_type (L.i8_type context)
+  in
 
 	let ltype_of_typ = function
 	    A.Int -> i32_t
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Char -> i8_t
+    | A.VoidPtr -> void_ptr_t
+    | A.Node -> node_t
+    | A.Edge -> edge_t
 	in
 
   (* Create a map of global variables after creating each *)
@@ -36,8 +50,34 @@ let translate (globals, functions) =
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
 
+  (* Node functions *)
+  let create_node_t : L.lltype = 
+    L.function_type node_t [| float_t; float_t; float_t; i32_t; i32_t; i32_t; void_ptr_t |] in
+  let create_node_func : L.llvalue =
+    L.declare_function "create_node" create_node_t the_module in
+  (* Edge functions *)
+  let create_edge_t : L.lltype =
+    L.function_type edge_t [| node_t ; node_t ; i32_t ; i32_t ; i32_t ; i32_t |] in
+  let create_edge_func : L.llvalue =
+    L.declare_function "create_edge" create_edge_t the_module in  
+
+  (* built-in functions *)
+  let built_in_func_decls : L.llvalue StringMap.t =
+    let f map (name, func) = StringMap.add name func map in
+    List.fold_left f StringMap.empty [("create_edge", create_edge_func)]
+  in
+
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
+  let function_decls : L.llvalue StringMap.t =
+    let function_decl m fdecl =
+      let name = fdecl.sfname
+      and formal_types = 
+        Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.sformals)
+      in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
+      StringMap.add name (L.define_function name ftype the_module) m in
+    List.fold_left function_decl built_in_func_decls functions in
+  (*
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
     let function_decl m fdecl =
       let name = fdecl.sfname
@@ -46,10 +86,12 @@ let translate (globals, functions) =
       in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
       StringMap.add name (L.define_function name ftype the_module, fdecl) m in
     List.fold_left function_decl StringMap.empty functions in
+  *)
 
 	let build_function_body fdecl =
 	  (* TODO *)
-    let (the_function, _) = StringMap.find fdecl.sfname function_decls in
+    (* let (the_function, _) = StringMap.find fdecl.sfname function_decls in *)
+    let the_function = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
@@ -144,8 +186,19 @@ let translate (globals, functions) =
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| string_format_str ; (expr builder e) |]
             "printf" builder
+      (* TODO void pointer *)
+      | SCall ("create_node", [x; y; radius; r; g; b; data]) ->
+        let x'      = (expr builder x)
+        and y'      = (expr builder y)
+        and radius' = (expr builder radius)
+        and r'      = (expr builder r)
+        and g'      = (expr builder g)
+        and b'      = (expr builder b) in
+        L.build_call create_node_func [| x'; y'; radius'; r'; g'; b'; (L.const_pointer_null void_ptr_t) |]
+          "create_node" builder
       | SCall (f, args) ->
-          let (fdef, fdecl) = StringMap.find f function_decls in
+          (* let (fdef, fdecl) = StringMap.find f function_decls in *)
+          let fdef = StringMap.find f function_decls in
           let llargs = List.rev (List.map (expr builder) (List.rev args)) in
           L.build_call fdef (Array.of_list llargs) (f ^ "_result") builder
       (* Id *)

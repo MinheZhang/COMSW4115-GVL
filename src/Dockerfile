@@ -4,6 +4,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -yq && \
     apt-get upgrade -yq && \
     apt-get install -yq --no-install-suggests --no-install-recommends \
+        clang \
         ocaml \
         menhir \
         llvm-10 \
@@ -15,6 +16,7 @@ RUN apt-get update -yq && \
         python2.7 \
         pkg-config \
         cmake \
+        clang \
         opam && \
     ln -s /usr/bin/lli-10 /usr/bin/lli && \
     ln -s /usr/bin/llc-10 /usr/bin/llc

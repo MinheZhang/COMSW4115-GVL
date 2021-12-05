@@ -6,7 +6,32 @@ module StringMap = Map.Make(String)
 let check (globals, functions) =
 	(* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
-    let add_bind map (name, ty) = StringMap.add name {
+    let add_bind map (name, formal_list, return_typ) = StringMap.add name {
+      typ = return_typ;
+      fname = name; 
+      formals = formal_list;
+      body = [] } map
+    in List.fold_left add_bind StringMap.empty [ ("printi", [(Int, "x")], Int);
+			                         ("printb", [(Bool, "x")], Int);
+			                         ("printf", [(Float, "x")], Int);
+			                         ("printc", [(Char, "x")], Int);
+			                         ("prints", [(String, "x")], Int);
+                               ("return_int_one", [], Int);
+                               ("create_node", [(Float, "x");
+                                                (Float, "y"); 
+                                                (Float, "radius");
+                                                (Int, "r");
+                                                (Int, "g");
+                                                (Int, "b");
+                                                (VoidPtr, "data")], Node);
+                               ("create_edge", [(Node, "start");
+                                                (Node, "end"); 
+                                                (Int, "bold");
+                                                (Int, "r");
+                                                (Int, "g");
+                                                (Int, "b")], Edge) ]
+  in
+    (* let add_bind map (name, ty) = StringMap.add name {
       typ = Int;
       fname = name; 
       formals = [(ty, "x")];
@@ -16,7 +41,7 @@ let check (globals, functions) =
 			                         ("printf", Float);
 			                         ("printc", Char);
 			                         ("prints", String) ]
-  in
+  in *)
 
   (* Add function name to symbol table *)
   let add_func map fd = 
@@ -46,7 +71,7 @@ let check (globals, functions) =
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
     let check_assign lvaluet rvaluet err =
-       if lvaluet = rvaluet then lvaluet else raise (Failure err)
+      if (lvaluet = rvaluet || lvaluet = VoidPtr) then lvaluet else raise (Failure err)
     in
 
     (* Build local symbol table of variables for this function *)
@@ -97,7 +122,7 @@ let check (globals, functions) =
 		  | Unop(op, e) as ex ->
 		      let (t, e') = check_expr e locals in
 		      let ty = match op with
-		      | Neg when t = Int -> t (* TODO Float *)
+		      | Neg when (t = Int || t = Float) -> t (* TODO Float *)
 		      | Not when t = Bool -> t
 		      | _ -> raise (Failure ("illegal unary operator " ^ 
 	                                string_of_uop op ^ string_of_typ t ^

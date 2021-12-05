@@ -32,15 +32,27 @@ ocamlyacc parser.mly
 ```
 
 ### Docker
+List all images.
+```
+docker images -a
+```
+Remove images.
+```
+docker rmi <image1> <image2> ...
+```
+Build image from `Dockerfile`.
+```
+docker build -f <path to>/Dockerfile -t <repo-name> .
+```
 Invoke Docker
 ```
-docker run --rm -it -v `pwd`:/home/gvl -w=/home/gvl columbiasedwards/plt
+docker run --rm -it -v `pwd`:/home/gvl -w=/home/gvl <repo-name>
 ```
 - `--rm`: Automatically remove the container when it exits
 - `-it`: Interactive and pseudo terminal
 - `-v`: Mounts the current working directory into the container
 - `-w`: Let the command being executed inside the current working directory
-- `columbiasedwards/plt`: Name of repository
+- `<repo-name>`: Name of repository
 
 ### Compile GVL Compiler in Docker
 Build.
