@@ -39,7 +39,6 @@ typedef list graph;  // graph: list of graph_node
 /******************************* Node *******************************/
 
 node *create_node(float x, float y, float radius, int r, int g, int b, void *data);
-int node_change_color(node *n, int r, int g, int b);
 
 // Get node attributes.
 float get_node_x(node *n);
@@ -48,7 +47,7 @@ float get_node_radius(node *n);
 int get_node_r(node *n);
 int get_node_g(node *n);
 int get_node_b(node *n);
-void *node_get_extra(node *n);
+void *get_node_extra(node *n);
 
 // Set node attributes.
 int set_node_x(node *n, float x);
@@ -58,12 +57,11 @@ int set_node_r(node *n, int r);
 int set_node_g(node *n, int g);
 int set_node_b(node *n, int b);
 int set_node_extra(node *n, void *extra);
+int set_node_color(node *n, int r, int g, int b);
 
 /******************************* Edge *******************************/
 
 edge *create_edge(node *start, node *end, int bold, int r, int g, int b);
-node *edge_get_start(edge *e);
-node *edge_get_end(edge *e);
 int edge_change_color(edge *e, int r, int g, int b);
 
 // Get edge attributes.

@@ -67,7 +67,7 @@ node *create_node(float x, float y, float radius, int r, int g, int b, void *ext
     return n;
 }
 
-int node_change_color(node *n, int r, int g, int b) {
+int set_node_color(node *n, int r, int g, int b) {
     n->r = r;
     n->g = g;
     n->b = b;
@@ -98,7 +98,7 @@ int get_node_b(node *n) {
     return n->b;
 }
 
-void *node_get_extra(node *n) {
+void *get_node_extra(node *n) {
     return n->extra;
 }
 
@@ -148,14 +148,6 @@ edge *create_edge(node *start, node *end, int bold, int r, int g, int b) {
     e->g = g;
     e->b = b;
     return e;
-}
-
-node *edge_get_start(edge *e) {
-    return e->start;
-}
-
-node *edge_get_end(edge *e) {
-    return e->end;
 }
 
 int edge_change_color(edge *e, int r, int g, int b) {
