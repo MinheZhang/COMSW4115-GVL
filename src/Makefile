@@ -1,4 +1,5 @@
 # "make test" Compiles everything and runs the regression tests
+GCC=gcc
 
 .PHONY : test
 test : all testall.sh
@@ -19,14 +20,17 @@ all : gvl.native printbig.o
 
 gvl.native :
 	opam config exec -- \
-	ocamlbuild -use-ocamlfind gvl.native
+	ocamlbuild -use-ocamlfind gvl.native \
+	-package llvm -package llvm.analysis -package llvm.bitreader
+	$(GCC) -c lib/graph.c lib/list.c
+	clang -emit-llvm -c lib/graph.c -o graph
 
 # "make clean" removes all generated files
 
 .PHONY : clean
 clean :
 	ocamlbuild -clean
-	rm -rf testall.log ocamlllvm *.diff
+	rm -rf testall.log ocamlllvm *.diff *.o
 
 # Testing the "printbig" example
 
