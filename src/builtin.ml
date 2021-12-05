@@ -10,7 +10,13 @@ let built_in_funcs = [
     (Int, "bold");
     (Int, "r");
     (Int, "g");
-    (Int, "b")], Edge) ]
+    (Int, "b")], Edge);
+  ("get_node_x", [Node, "n"], Float);
+  ("get_node_y", [Node, "n"], Float);
+  ("get_node_radius", [Node, "n"], Float);
+  ("get_node_r", [Node, "n"], Int);
+  ("get_node_g", [Node, "n"], Int);
+  ("get_node_b", [Node, "n"], Int) ]
 
 let semant_built_in_funcs = [
   ("printi", [(Int, "x")], Int);
