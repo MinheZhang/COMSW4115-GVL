@@ -8,9 +8,9 @@
 #include "list.h"
 
 typedef struct node_t {
-    float x;
-    float y;
-    float radius;
+    double x;
+    double y;
+    double radius;
     int r;
     int g;
     int b;
@@ -38,21 +38,21 @@ typedef list graph;  // graph: list of graph_node
 
 /******************************* Node *******************************/
 
-node *create_node(float x, float y, float radius, int r, int g, int b, void *data);
+node *create_node(double x, double y, double radius, int r, int g, int b, void *data);
 
 // Get node attributes.
-float get_node_x(node *n);
-float get_node_y(node *n);
-float get_node_radius(node *n);
+double get_node_x(node *n);
+double get_node_y(node *n);
+double get_node_radius(node *n);
 int get_node_r(node *n);
 int get_node_g(node *n);
 int get_node_b(node *n);
 void *get_node_extra(node *n);
 
 // Set node attributes.
-int set_node_x(node *n, float x);
-int set_node_y(node *n, float y);
-int set_node_radius(node *n, float radius);
+int set_node_x(node *n, double x);
+int set_node_y(node *n, double y);
+int set_node_radius(node *n, double radius);
 int set_node_r(node *n, int r);
 int set_node_g(node *n, int g);
 int set_node_b(node *n, int b);
