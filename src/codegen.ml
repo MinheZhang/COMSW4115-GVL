@@ -1,6 +1,7 @@
 module L = Llvm
 module A = Ast
 open Sast
+open Builtin
 
 module StringMap = Map.Make(String)
 
@@ -50,21 +51,17 @@ let translate (globals, functions) =
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
 
-  (* Node functions *)
   let create_node_t : L.lltype = 
     L.function_type node_t [| float_t; float_t; float_t; i32_t; i32_t; i32_t; void_ptr_t |] in
   let create_node_func : L.llvalue =
     L.declare_function "create_node" create_node_t the_module in
-  (* Edge functions *)
-  let create_edge_t : L.lltype =
-    L.function_type edge_t [| node_t ; node_t ; i32_t ; i32_t ; i32_t ; i32_t |] in
-  let create_edge_func : L.llvalue =
-    L.declare_function "create_edge" create_edge_t the_module in  
 
   (* built-in functions *)
   let built_in_func_decls : L.llvalue StringMap.t =
     let f map (name, func) = StringMap.add name func map in
-    List.fold_left f StringMap.empty [("create_edge", create_edge_func)]
+    List.fold_left f StringMap.empty (("printf", printf_func) ::
+                                      ("create_node", create_node_func) :: 
+                                      (decl_built_in_functions ltype_of_typ the_module))
   in
 
   (* Define each function (arguments and return type) so we can 
