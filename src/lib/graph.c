@@ -182,63 +182,7 @@ int get_edge_b(edge *e) {
     return e->b;
 }
 
-// Get edge attributes.
-int set_edge_start(edge *e, node *start) {
-    e->start = start;
-    return 0;
-}
-
-int set_edge_end(edge *e, node *end) {
-    e->end = end;
-    return 0;
-}
-
-int set_edge_bold(edge *e, int bold) {
-    e->bold = bold;
-    return 0;
-}
-
-int set_edge_r(edge *e, int r) {
-    e->r = r;
-    return 0;
-}
-
-int set_edge_g(edge *e, int g) {
-    e->g = g;
-    return 0;
-}
-
-int set_edge_b(edge *e, int b) {
-    e->b = b;
-    return 0;
-}
-
-// Get edge attributes.
-node *get_edge_start(edge *e) {
-    return e->start;
-}
-
-node *get_edge_end(edge *e) {
-    return e->end;
-}
-
-int get_edge_bold(edge *e) {
-    return e->bold;
-}
-
-int get_edge_r(edge *e) {
-    return e->r;
-}
-
-int get_edge_g(edge *e) {
-    return e->g;
-}
-
-int get_edge_b(edge *e) {
-    return e->b;
-}
-
-// Get edge attributes.
+// Set edge attributes.
 int set_edge_start(edge *e, node *start) {
     e->start = start;
     return 0;

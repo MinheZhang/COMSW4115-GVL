@@ -61,26 +61,6 @@ int set_node_color(node *n, int r, int g, int b);
 
 /******************************* Edge *******************************/
 
-// Get node attributes.
-float get_node_x(node *n);
-float get_node_y(node *n);
-float get_node_radius(node *n);
-int get_node_r(node *n);
-int get_node_g(node *n);
-int get_node_b(node *n);
-void *node_get_extra(node *n);
-
-// Set node attributes.
-int set_node_x(node *n, float x);
-int set_node_y(node *n, float y);
-int set_node_radius(node *n, float radius);
-int set_node_r(node *n, int r);
-int set_node_g(node *n, int g);
-int set_node_b(node *n, int b);
-int set_node_extra(node *n, void *extra);
-
-/******************************* Edge *******************************/
-
 edge *create_edge(node *start, node *end, int bold, int r, int g, int b);
 int edge_change_color(edge *e, int r, int g, int b);
 
