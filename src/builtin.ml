@@ -4,6 +4,7 @@ open Ast
 module StringMap = Map.Make(String)
 
 let built_in_funcs = [
+  (* Edge Function *)
   ("create_edge", [
     (Node, "start");
     (Node, "end"); 
@@ -11,12 +12,54 @@ let built_in_funcs = [
     (Int, "r");
     (Int, "g");
     (Int, "b")], Edge);
-  ("get_node_x", [Node, "n"], Float);
-  ("get_node_y", [Node, "n"], Float);
-  ("get_node_radius", [Node, "n"], Float);
-  ("get_node_r", [Node, "n"], Int);
-  ("get_node_g", [Node, "n"], Int);
-  ("get_node_b", [Node, "n"], Int) ]
+  ("edge_change_color", [
+    (Edge, "e");
+    (Int, "r");
+    (Int, "g");
+    (Int, "b")], Int);
+  (* Get Edge Attributes *)
+  ("get_edge_start", [(Edge, "e")], Node);
+  ("get_edge_end", [(Edge, "e")], Node);
+  ("get_edge_bold", [(Edge, "e")], Int);
+  ("get_edge_r", [(Edge, "e")], Int);
+  ("get_edge_g", [(Edge, "e")], Int);
+  ("get_edge_b", [(Edge, "e")], Int);
+  (* Set Edge Attributes *)
+  ("set_edge_start", [(Edge, "e"); (Node, "start")], Int);
+  ("set_edge_end", [(Edge, "e"); (Node, "end")], Int);
+  ("set_edge_bold", [(Edge, "e"); (Int, "bold")], Int);
+  ("set_edge_r", [(Edge, "e"); (Int, "r")], Int);
+  ("set_edge_g", [(Edge, "e"); (Int, "g")], Int);
+  ("set_edge_b", [(Edge, "e"); (Int, "b")], Int);
+  (* Node Functions *)
+  (* Get Node Attributes *)
+  ("get_node_x", [(Node, "n")], Float);
+  ("get_node_y", [(Node, "n")], Float);
+  ("get_node_radius", [(Node, "n")], Float);
+  ("get_node_r", [(Node, "n")], Int);
+  ("get_node_g", [(Node, "n")], Int);
+  ("get_node_b", [(Node, "n")], Int);
+  (* TODO get_node_extra *)
+  (* Set Node Attributes *)
+  ("set_node_x", [(Node, "n"); (Float, "x")], Int);
+  ("set_node_y", [(Node, "n"); (Float, "y")], Int);
+  ("set_node_radius", [(Node, "n"); (Float, "radius")], Int);
+  ("set_node_r", [(Node, "n"); (Int, "r")], Int);
+  ("set_node_g", [(Node, "n"); (Int, "g")], Int);
+  ("set_node_b", [(Node, "n"); (Int, "b")], Int);
+  (* TODO set_node_extra *)
+  (* ("set_node_extra", [(Node, "n"); (VoidPtr, "extra")], Int); *)
+  ("set_node_color", [(Node, "n"); (Int, "r"); (Int, "g"); (Int, "b")], Int);
+  (* Graph Functions*)
+  ("create_graph", [], Graph);
+  ("add_node", [(Graph, "g"); (Node, "n")], Int);
+  ("remove_node", [(Graph, "g"); (Node, "n")], Int);
+  ("add_edge", [(Graph, "g"); (Edge, "e")], Int);
+  ("remove_edge", [(Graph, "g"); (Node, "n")], Int);
+  ("destroy_graph", [(Graph, "g")], Int);
+  ("get_edges", [(Graph, "g"); (Node, "n")], GvlList)
+  (* TODO print_graph *)
+  ]
 
 let semant_built_in_funcs = [
   ("printi", [(Int, "x")], Int);

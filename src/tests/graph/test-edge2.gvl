@@ -4,7 +4,12 @@ int main() {
   node n2;
   n2 = create_node(2.0, 1.0, 1.0, 255, 255, 255, 0);
   edge e;
-  e = create_edge(n1, n2, 1, 1, 1, 1);
+  e = create_edge(n1, n2, 1, 2, 3, 4);
   
+  printi(get_edge_bold(e));
+  printi(get_edge_r(e));
+  printi(get_edge_g(e));
+  printi(get_edge_b(e));
+
   return 0;
 }

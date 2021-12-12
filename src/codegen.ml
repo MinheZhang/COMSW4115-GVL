@@ -9,6 +9,8 @@ let translate (globals, functions) =
 	let context = L.global_context () in
   let llmem = L.MemoryBuffer.of_file "graph" in
   let llm = Llvm_bitreader.parse_bitcode context llmem in
+  let llmem_list = L.MemoryBuffer.of_file "list" in
+  let llm_list = Llvm_bitreader.parse_bitcode context llmem_list in
 
 	(* Create the LLVM compilation module into which
 	we will generate code *)
@@ -24,6 +26,12 @@ let translate (globals, functions) =
   and edge_t     = L.pointer_type (match L.type_by_name llm "struct.edge_t" with
                                               None -> raise (Failure "the edge type is not defined.")
                                             | Some x -> x)
+  and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
+                                              None -> raise (Failure "the graph type is not defined.")
+                                            | Some x -> x)  
+  and list_t     = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
+                                              None -> raise (Failure "the list type is not defined.")
+                                            | Some x -> x)                    
   and void_ptr_t = L.pointer_type (L.i8_type context)
   in
 
@@ -35,6 +43,9 @@ let translate (globals, functions) =
     | A.VoidPtr -> void_ptr_t
     | A.Node -> node_t
     | A.Edge -> edge_t
+    | A.Graph -> graph_t
+    (* TODO GvlList *)
+    | A.GvlList -> list_t
 	in
 
   (* Create a map of global variables after creating each *)

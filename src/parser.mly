@@ -12,7 +12,7 @@
 /* separators */
 %token LPAREN RPAREN LBRACKET RBRACKET LBRACE RBRACE COMMA SEMI
 /* types */
-%token BOOL INT FLOAT CHAR STRING STRUCT NODE EDGE GRAPH
+%token BOOL INT FLOAT CHAR STRING STRUCT NODE EDGE GRAPH LIST
 /* node/edge extension */
 %token COLON
 /* reference */
@@ -106,6 +106,7 @@ typ:
 | NODE        { Node }
 | EDGE        { Edge }
 | GRAPH       { Graph }
+| LIST        { GvlList }
 //| typ LBRACKET expr RBRACKET {}  // TODO
 
 

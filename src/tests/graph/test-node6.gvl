@@ -1,0 +1,13 @@
+int main() {
+
+  node n;
+  n = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+
+  set_node_color(n, 1, 2, 3);
+
+  printi(get_node_r(n));
+  printi(get_node_g(n));
+  printi(get_node_b(n));
+
+  return 0;
+}
