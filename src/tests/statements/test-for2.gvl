@@ -1,0 +1,9 @@
+int main() {
+  int x;
+  for (x = 0; x < 10; x = x + 1) {
+    int j;
+    j = 10;
+    printi(x + 10);
+  }
+  return 0;
+}

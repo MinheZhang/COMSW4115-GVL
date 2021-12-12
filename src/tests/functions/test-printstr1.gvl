@@ -1,0 +1,4 @@
+int main() {
+  prints("123");
+  return 0;
+}
