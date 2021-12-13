@@ -1,0 +1,9 @@
+int main() {
+
+  graph g;
+  g = create_graph();
+  
+  destroy_graph(g);
+
+  return 0;
+}

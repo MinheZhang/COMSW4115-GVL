@@ -182,7 +182,7 @@ int get_edge_b(edge *e) {
     return e->b;
 }
 
-// Get edge attributes.
+// Set edge attributes.
 int set_edge_start(edge *e, node *start) {
     e->start = start;
     return 0;

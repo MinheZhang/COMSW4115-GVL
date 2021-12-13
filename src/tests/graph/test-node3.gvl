@@ -1,0 +1,20 @@
+int main() {
+
+  node n;
+  n = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+
+  set_node_x(n, 10.0);
+  set_node_y(n, 11.0);
+  set_node_radius(n, 3.14);
+  set_node_r(n, 128);
+  set_node_g(n, 128);
+  set_node_b(n, 128);
+
+  printf(get_node_x(n));
+  printf(get_node_y(n));
+  printf(get_node_radius(n));
+  printi(get_node_r(n));
+  printi(get_node_g(n));
+  printi(get_node_b(n));
+  return 0;
+}
