@@ -28,10 +28,16 @@ let translate (globals, functions) =
                                             | Some x -> x)
   and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
                                               None -> raise (Failure "the graph type is not defined.")
-                                            | Some x -> x)  
-  and list_t     = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
-                                              None -> raise (Failure "the list type is not defined.")
-                                            | Some x -> x)                    
+                                            | Some x -> x)
+  and list_t     = match L.type_by_name llm_list "struct.list_t" with
+                              None -> raise (Failure "the list type is not defined.")
+                            | Some x -> x           
+  (* and graph_t    = L.pointer_type (match L.type_by_name llm "graph" with
+                                            None -> raise (Failure "the graph type is not defined.")
+                                          | Some x -> x)  
+  and list_t     = L.pointer_type (match L.type_by_name llm "graph" with
+                                            None -> raise (Failure "the list type is not defined.")
+                                          | Some x -> x)   *)
   and void_ptr_t = L.pointer_type (L.i8_type context)
   in
 
@@ -44,7 +50,6 @@ let translate (globals, functions) =
     | A.Node -> node_t
     | A.Edge -> edge_t
     | A.Graph -> graph_t
-    (* TODO GvlList *)
     | A.GvlList -> list_t
 	in
 
