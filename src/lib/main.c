@@ -3,17 +3,17 @@
 #include "graph.h"
 
 void dfs(graph *g, node *n) {
-    int *visited = node_get_extra(n);
+    int *visited = get_node_extra(n);
     *visited = 1;
 
-    node_change_color(n, 100, 100, 100);
+    set_node_color(n, 100, 100, 100);
     printf("%g, %g\n", n->x, n->y);
 
-    list g_edges = get_edges(g, n);
-    for (list_iterator l_iter = list_begin(g_edges); l_iter != list_end(); l_iter = list_iter_next(l_iter)) {
+    list *g_edges = get_edges(g, n);
+    for (list_iterator l_iter = list_begin(*g_edges); l_iter != list_end(); l_iter = list_iter_next(l_iter)) {
         edge *e = list_iter_data(l_iter);
-        node *end_node = edge_get_end(e);
-        int *e_visited = node_get_extra(end_node);
+        node *end_node = get_edge_end(e);
+        int *e_visited = get_node_extra(end_node);
         if (!(*e_visited)) {
             dfs(g, end_node);
         }

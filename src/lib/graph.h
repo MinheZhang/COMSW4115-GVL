@@ -89,7 +89,7 @@ int add_edge(graph *g, edge *e);
 int remove_edge(graph *g, edge *e);
 int destroy_graph(graph *g);
 
-list get_edges(graph *g, node *n);
+list *get_edges(graph *g, node *n);
 
 void print_graph(graph *g, int simple);
 
