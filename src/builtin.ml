@@ -57,8 +57,12 @@ let built_in_funcs = [
   ("add_edge", [(Graph, "g"); (Edge, "e")], Int);
   ("remove_edge", [(Graph, "g"); (Node, "n")], Int);
   ("destroy_graph", [(Graph, "g")], Int);
-  ("get_edges", [(Graph, "g"); (Node, "n")], GvlList)
+  ("get_edges", [(Graph, "g"); (Node, "n")], GvlList);
   (* TODO print_graph *)
+  (* List Functions *)
+  ("list_begin", [(GvlList, "l")], GvlListIterator);
+  ("list_end", [], GvlListIterator);
+  ("list_iter_next", [(GvlListIterator, "iter")], GvlListIterator)
   ]
 
 let semant_built_in_funcs = [

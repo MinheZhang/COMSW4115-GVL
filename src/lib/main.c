@@ -10,7 +10,7 @@ void dfs(graph *g, node *n) {
     printf("%g, %g\n", n->x, n->y);
 
     list *g_edges = get_edges(g, n);
-    for (list_iterator l_iter = list_begin(*g_edges); l_iter != list_end(); l_iter = list_iter_next(l_iter)) {
+    for (list_iterator l_iter = list_begin(g_edges); l_iter != list_end(); l_iter = list_iter_next(l_iter)) {
         edge *e = list_iter_data(l_iter);
         node *end_node = get_edge_end(e);
         int *e_visited = get_node_extra(end_node);

@@ -3,7 +3,7 @@ type op = Add | Sub | Mul | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq
 
 type uop = Neg | Not
 
-type typ = Bool | Int | Float | Char | String | StructID | Node | Edge | Graph | VoidPtr | GvlList
+type typ = Bool | Int | Float | Char | String | StructID | Node | Edge | Graph | VoidPtr | GvlList | GvlListIterator
 
 type bind = typ * string
 
@@ -69,6 +69,7 @@ let string_of_typ = function
 |   Graph -> "graph"
 |   VoidPtr -> ""
 |   GvlList -> "list"
+|   GvlListIterator -> "list_iterator"
     (* typ LBRACKET RBRACKET *)
 
 let string_of_bind (t, id) = string_of_typ t ^ " " ^ id ^ ";\n" 

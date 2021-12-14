@@ -1,0 +1,35 @@
+int main() {
+
+  node n1;
+  n1 = create_node(1.0, 2.0, 1.0, 255, 255, 255, 0);
+  node n2;
+  n2 = create_node(3.0, 4.0, 1.0, 255, 255, 255, 0);
+  node n3;
+  n3 = create_node(5.0, 4.0, 1.0, 255, 255, 255, 0);
+
+  edge e12;
+  e12 = create_edge(n1, n2, 1, 255, 255, 255);
+  edge e13;
+  e13 = create_edge(n1, n3, 1, 255, 255, 255);
+
+  graph g;
+  g = create_graph();
+  
+  add_node(g, n1);
+  add_node(g, n2);
+  add_node(g, n3);
+  add_edge(g, e12);
+  add_edge(g, e13);
+
+  list adjs;
+  adjs = get_edges(g, n1);
+
+  list_iterator iter;
+  for (iter = list_begin(adjs); iter != list_end(); iter = list_iter_next(iter)) {
+    prints("e");
+  }
+
+  destroy_graph(g);
+
+  return 0;
+}
