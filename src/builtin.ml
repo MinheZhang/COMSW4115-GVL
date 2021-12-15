@@ -62,7 +62,8 @@ let built_in_funcs = [
   (* List Functions *)
   ("list_begin", [(GvlList, "l")], GvlListIterator);
   ("list_end", [], GvlListIterator);
-  ("list_iter_next", [(GvlListIterator, "iter")], GvlListIterator)
+  ("list_iter_next", [(GvlListIterator, "iter")], GvlListIterator);
+  ("list_iter_data", [(GvlListIterator, "iter")], VoidPtr)
   ]
 
 let semant_built_in_funcs = [

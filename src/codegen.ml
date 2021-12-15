@@ -51,6 +51,12 @@ let translate (globals, functions) =
     | A.GvlListIterator -> list_iterator_t
 	in
 
+  let edge_ptr_t = L.pointer_type edge_t in
+  let dereference_typ = function
+      edge_ptr_t -> edge_t
+    | _ -> raise (Failure "type cannot be dereferenced")
+  in
+
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
     let global_var m (t, n) = 
@@ -61,9 +67,9 @@ let translate (globals, functions) =
     List.fold_left global_var StringMap.empty globals in
 
   let printf_t : L.lltype = 
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
-      L.declare_function "printf" printf_t the_module in
+    L.declare_function "printf" printf_t the_module in
 
   let create_node_t : L.lltype = 
     L.function_type node_t [| float_t; float_t; float_t; i32_t; i32_t; i32_t; void_ptr_t |] in
@@ -182,8 +188,27 @@ let translate (globals, functions) =
 	          A.Neg -> L.build_neg
 	        | A.Not -> L.build_not) e' "tmp" builder
 	    
-	    | SAssign (v, e) -> let e' = expr builder e in
-                          ignore(L.build_store e' (lookup v) builder); e'
+	    | SAssign (v, e) ->
+          (match e with
+            (A.VoidPtr, _) ->
+              let e' = expr builder e in
+              let v_val = lookup v in
+              let cast_typ = dereference_typ (L.type_of v_val) in (* TODO *)
+              (*
+              let void_val = L.build_load e' v builder in
+              let cast_val_ptr = L.build_bitcast void_val cast_typ "cast" builder in
+              let cast_val = L.build_load cast_val_ptr v builder in
+              *)
+              (*
+              let cast_val_ptr = L.build_bitcast e' cast_typ "cast" builder in
+              let cast_val = L.build_load cast_val_ptr v builder in
+              *)
+              let cast_val = L.build_bitcast e' cast_typ "cast" builder in
+                ignore(L.build_store cast_val v_val builder); cast_val
+          | _ ->
+            let e' = expr builder e in
+              ignore(L.build_store e' (lookup v) builder); e')
+
 	    (* Function call *)
       | SCall ("printi", [e]) | SCall ("printb", [e]) ->
           L.build_call printf_func [| int_format_str ; (expr builder e) |]
