@@ -193,16 +193,7 @@ let translate (globals, functions) =
             (A.VoidPtr, _) ->
               let e' = expr builder e in
               let v_val = lookup v in
-              let cast_typ = dereference_typ (L.type_of v_val) in (* TODO *)
-              (*
-              let void_val = L.build_load e' v builder in
-              let cast_val_ptr = L.build_bitcast void_val cast_typ "cast" builder in
-              let cast_val = L.build_load cast_val_ptr v builder in
-              *)
-              (*
-              let cast_val_ptr = L.build_bitcast e' cast_typ "cast" builder in
-              let cast_val = L.build_load cast_val_ptr v builder in
-              *)
+              let cast_typ = dereference_typ (L.type_of v_val) in
               let cast_val = L.build_bitcast e' cast_typ "cast" builder in
                 ignore(L.build_store cast_val v_val builder); cast_val
           | _ ->
