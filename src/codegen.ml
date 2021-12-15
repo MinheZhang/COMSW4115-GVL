@@ -29,15 +29,12 @@ let translate (globals, functions) =
   and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
                                               None -> raise (Failure "the graph type is not defined.")
                                             | Some x -> x)
-  and list_t     = match L.type_by_name llm_list "struct.list_t" with
-                              None -> raise (Failure "the list type is not defined.")
-                            | Some x -> x           
-  (* and graph_t    = L.pointer_type (match L.type_by_name llm "graph" with
-                                            None -> raise (Failure "the graph type is not defined.")
-                                          | Some x -> x)  
-  and list_t     = L.pointer_type (match L.type_by_name llm "graph" with
-                                            None -> raise (Failure "the list type is not defined.")
-                                          | Some x -> x)   *)
+  and list_t     = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
+                                              None -> raise (Failure "the list type is not defined.")
+                                            | Some x -> x)
+  and list_iterator_t = L.pointer_type (match L.type_by_name llm_list "struct.list_node_t" with
+                                                  None -> raise (Failure "the list iterator type is not defined.")
+                                                | Some x -> x)
   and void_ptr_t = L.pointer_type (L.i8_type context)
   in
 
@@ -51,7 +48,14 @@ let translate (globals, functions) =
     | A.Edge -> edge_t
     | A.Graph -> graph_t
     | A.GvlList -> list_t
+    | A.GvlListIterator -> list_iterator_t
 	in
+
+  let edge_ptr_t = L.pointer_type edge_t in
+  let dereference_typ = function
+      edge_ptr_t -> edge_t
+    | _ -> raise (Failure "type cannot be dereferenced")
+  in
 
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
@@ -63,9 +67,9 @@ let translate (globals, functions) =
     List.fold_left global_var StringMap.empty globals in
 
   let printf_t : L.lltype = 
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+    L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
-      L.declare_function "printf" printf_t the_module in
+    L.declare_function "printf" printf_t the_module in
 
   let create_node_t : L.lltype = 
     L.function_type node_t [| float_t; float_t; float_t; i32_t; i32_t; i32_t; void_ptr_t |] in
@@ -184,8 +188,18 @@ let translate (globals, functions) =
 	          A.Neg -> L.build_neg
 	        | A.Not -> L.build_not) e' "tmp" builder
 	    
-	    | SAssign (v, e) -> let e' = expr builder e in
-                          ignore(L.build_store e' (lookup v) builder); e'
+	    | SAssign (v, e) ->
+          (match e with
+            (A.VoidPtr, _) ->
+              let e' = expr builder e in
+              let v_val = lookup v in
+              let cast_typ = dereference_typ (L.type_of v_val) in
+              let cast_val = L.build_bitcast e' cast_typ "cast" builder in
+                ignore(L.build_store cast_val v_val builder); cast_val
+          | _ ->
+            let e' = expr builder e in
+              ignore(L.build_store e' (lookup v) builder); e')
+
 	    (* Function call *)
       | SCall ("printi", [e]) | SCall ("printb", [e]) ->
           L.build_call printf_func [| int_format_str ; (expr builder e) |]

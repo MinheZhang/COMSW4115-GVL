@@ -288,10 +288,10 @@ int destroy_graph(graph *g) {
     return 0;
 }
 
-list get_edges(graph *g, node *n) {
+list *get_edges(graph *g, node *n) {
     graph_node ref;
     ref.n = n;
     graph_node *gn = find(cmp_node, &ref, g);
 
-    return gn->edges;
+    return &(gn->edges);
 }
