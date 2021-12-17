@@ -10,6 +10,10 @@ This is a course project of COMS W4115. A compiler of a graph visualization lang
 ### Iteration 2
 - ~~Node~~
 - ~~Edge~~
+<<<<<<< HEAD
+=======
+- 1-D Array
+>>>>>>> main
 
 ### Iteration 3
 - Visualization

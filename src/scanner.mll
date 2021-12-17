@@ -68,6 +68,7 @@ rule tokenize = parse
 | "edge" { EDGE }
 | "graph" { GRAPH }
 | "list" { LIST }
+| "list_iterator" { LISTITER }
 (* CONSTANTS *)
 | "true" { BOOLLIT(true) }
 | "false" { BOOLLIT(false) }

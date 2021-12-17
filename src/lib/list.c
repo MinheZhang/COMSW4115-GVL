@@ -145,8 +145,8 @@ list copy_all(list *l) {
 }
 
 /******************************* iterator *******************************/
-list_iterator list_begin(list l) {
-    return l.first;
+list_iterator list_begin(list *l) {
+    return l->first;
 }
 
 list_iterator list_end() {
