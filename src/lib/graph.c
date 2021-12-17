@@ -182,7 +182,7 @@ int get_edge_b(edge *e) {
     return e->b;
 }
 
-// Get edge attributes.
+// Set edge attributes.
 int set_edge_start(edge *e, node *start) {
     e->start = start;
     return 0;
@@ -288,10 +288,10 @@ int destroy_graph(graph *g) {
     return 0;
 }
 
-list get_edges(graph *g, node *n) {
+list *get_edges(graph *g, node *n) {
     graph_node ref;
     ref.n = n;
     graph_node *gn = find(cmp_node, &ref, g);
 
-    return gn->edges;
+    return &(gn->edges);
 }

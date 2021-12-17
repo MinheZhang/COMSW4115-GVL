@@ -33,7 +33,7 @@ void remove_all(list *l);
 list copy_all(list *l);
 
 /******************************* iterator *******************************/
-list_iterator list_begin(list l);
+list_iterator list_begin(list *l);
 list_iterator list_end();
 list_iterator list_iter_next(list_iterator iter);
 void *list_iter_data(list_iterator iter);

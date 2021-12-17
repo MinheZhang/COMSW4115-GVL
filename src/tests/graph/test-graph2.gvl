@@ -1,0 +1,15 @@
+int main() {
+
+  graph g;
+  g = create_graph();
+  
+  node n1;
+  n1 = create_node(1.0, 2.0, 1.0, 255, 255, 255, 0);
+
+  add_node(g, n1);
+  remove_node(g, n1);
+
+  destroy_graph(g);
+
+  return 0;
+}

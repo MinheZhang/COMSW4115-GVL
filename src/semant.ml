@@ -43,7 +43,10 @@ let check (globals, functions) =
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
     let check_assign lvaluet rvaluet err =
-      if (lvaluet = rvaluet || lvaluet = VoidPtr) then lvaluet else raise (Failure err)
+      if (lvaluet = rvaluet
+          || lvaluet = VoidPtr
+          || ((lvaluet = GvlListIterator || lvaluet = Node || lvaluet = Edge || lvaluet = Graph) && rvaluet = VoidPtr))
+        then lvaluet else raise (Failure err)
     in
 
     (* Build local symbol table of variables for this function *)
@@ -105,7 +108,7 @@ let check (globals, functions) =
 		      and (e_t, e') = check_expr e locals in
 		      let err = "illegal assignment " ^ string_of_typ v_t ^ " = " ^ 
             string_of_typ e_t ^ " in " ^ string_of_expr ex in
-          let ty = if v_t = e_t then v_t else raise (Failure err) in
+          let ty = check_assign v_t e_t err in
           (ty, SAssign(v, (e_t, e')))
       | Call(fname, args) as call ->
           let fd = find_func fname in

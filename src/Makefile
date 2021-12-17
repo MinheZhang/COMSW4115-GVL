@@ -24,6 +24,8 @@ gvl.native :
 	-package llvm -package llvm.analysis -package llvm.bitreader
 	$(GCC) -c lib/graph.c lib/list.c
 	clang -emit-llvm -c lib/graph.c -o graph
+	$(GCC) -c lib/list.c
+	clang -emit-llvm -c lib/list.c -o list
 
 # "make clean" removes all generated files
 

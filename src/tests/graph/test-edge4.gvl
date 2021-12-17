@@ -1,10 +1,23 @@
 int main() {
+
   node n1;
   n1 = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+
   node n2;
   n2 = create_node(2.0, 1.0, 1.0, 255, 255, 255, 0);
+
   edge e;
   e = create_edge(n1, n2, 1, 1, 1, 1);
+
+  set_edge_bold(e, 100);
+  set_edge_r(e, 128);
+  set_edge_g(e, 129);
+  set_edge_b(e, 130);
+
+  printi(get_edge_bold(e));
+  printi(get_edge_r(e));
+  printi(get_edge_g(e));
+  printi(get_edge_b(e));
   
   return 0;
 }
