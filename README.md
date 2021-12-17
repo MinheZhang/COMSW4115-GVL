@@ -10,7 +10,6 @@ This is a course project of COMS W4115. A compiler of a graph visualization lang
 ### Iteration 2
 - ~~Node~~
 - ~~Edge~~
-- 1-D Array
 
 ### Iteration 3
 - Visualization
@@ -62,6 +61,12 @@ opam config exec -- ocamlbuild -use-ocamlfind gvl.native
 Build clean.
 ```
 opam config exec -- ocamlbuild -clean
+```
+
+### Generate IR
+From c.
+```
+clang -S -emit-llvm foo.c
 ```
 
 ## Testing
