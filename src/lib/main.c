@@ -7,7 +7,9 @@ void dfs(graph *g, node *n) {
     *visited = 1;
 
     set_node_color(n, 100, 100, 100);
-    printf("%g, %g\n", n->x, n->y);
+    show_graph(g);
+    // printf("%g, %g\n", n->x, n->y);
+
 
     list *g_edges = get_edges(g, n);
     for (list_iterator l_iter = list_begin(g_edges); l_iter != list_end(); l_iter = list_iter_next(l_iter)) {
@@ -48,14 +50,14 @@ void graph_demo() {
     *n4_visited = 0;
 
     graph *g = create_graph();
-    node *n1 = create_node(1, 2, 3, 4, 5, 6, n1_visited);
-    node *n2 = create_node(4, 5, 6, 6, 7, 7, n2_visited);
-    node *n3 = create_node(3, 2, 4, 1, 2, 4, n3_visited);
-    node *n4 = create_node(9, 10, 2, 3, 2, 3, n4_visited);
-    edge *e1 = create_edge(n1, n2, 1, 2, 3, 4);
-    edge *e2 = create_edge(n2, n3, 1, 2, 3, 4);
-    edge *e3 = create_edge(n1, n4, 1, 2, 3, 5);
-    edge *e4 = create_edge(n2, n4, 1, 2, 3, 4);
+    node *n1 = create_node(200, 200, 20, 255, 0, 0, n1_visited);
+    node *n2 = create_node(80, 200, 20, 255, 0, 0, n2_visited);
+    node *n3 = create_node(80, 80, 20, 255, 0, 0, n3_visited);
+    node *n4 = create_node(200, 80, 20, 255, 0, 0, n4_visited);
+    edge *e1 = create_edge(n1, n2, 1, 255, 0, 0);
+    edge *e2 = create_edge(n2, n3, 1, 255, 0, 0);
+    edge *e3 = create_edge(n1, n4, 1, 255, 0, 0);
+    edge *e4 = create_edge(n2, n4, 1, 255, 0, 0);
 
     add_node(g, n1);
     add_node(g, n2);
