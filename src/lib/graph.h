@@ -93,4 +93,7 @@ list *get_edges(graph *g, node *n);
 
 void print_graph(graph *g, int simple);
 
+/******************************* Visualization *******************************/
+int show_graph(graph *g);
+
 #endif //GRAPH_GRAPH_H
