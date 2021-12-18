@@ -34,7 +34,7 @@ void print_graph(graph *g, int simple) {
     list_node *iter = g->first;
     while(iter) {
         graph_node *gn = (graph_node *)iter->data;
-        list_node *edge_iter = gn->edges.first;
+        list_node *edge_iter = gn->edges->first;
 
         if (simple) {
             printf("(%g, %g)\n", gn->n->x, gn->n->y);
@@ -216,8 +216,8 @@ int set_edge_b(edge *e, int b) {
 /******************************* graph *******************************/
 
 graph *create_graph() {
-    graph *g = malloc(sizeof(graph));
-    *g = create_list(sizeof(graph_node));
+    graph *g;
+    g = create_list(sizeof(graph_node));
     return g;
 }
 
@@ -240,7 +240,7 @@ int remove_node(graph *g, node *n) {
 
         edge e_ref;
         e_ref.end = n;
-        edge *removed_e = remove_list_node(cmp_edge_end_node, &e_ref, &(gn->edges));
+        edge *removed_e = remove_list_node(cmp_edge_end_node, &e_ref, gn->edges);
         free(removed_e);
 
         iter = iter->next;
@@ -250,7 +250,7 @@ int remove_node(graph *g, node *n) {
     graph_node *data = (graph_node *)remove_list_node(cmp_node, &gn_ref, g);
     free(data->n->extra); // free extra
     free(data->n);
-    remove_all(&data->edges);
+    remove_all(data->edges);
     free(data);
 
     return 0;
@@ -263,7 +263,7 @@ int add_edge(graph *g, edge *e) {
     if (start_gn == NULL) {
         return 1;
     }
-    insert_back((&start_gn->edges), e);
+    insert_back(start_gn->edges, e);
     return 0;
 }
 
@@ -271,7 +271,7 @@ int remove_edge(graph *g, edge *e) {
     graph_node start_ref;
     start_ref.n = e->start;
     graph_node *start_gn = find(cmp_node, &start_ref, g);
-    edge *removed_e = remove_list_node(cmp_edge, e, &(start_gn->edges));
+    edge *removed_e = remove_list_node(cmp_edge, e, start_gn->edges);
     free(removed_e);
     return 0;
 }
@@ -279,7 +279,7 @@ int remove_edge(graph *g, edge *e) {
 int destroy_graph(graph *g) {
     while (!is_empty(g)) {
         graph_node *gn = (graph_node *)remove_front(g);
-        remove_all(&(gn->edges));
+        remove_all(gn->edges);
         free(gn->n->extra); // free extra
         free(gn->n);
         free(gn);
@@ -293,5 +293,5 @@ list *get_edges(graph *g, node *n) {
     ref.n = n;
     graph_node *gn = find(cmp_node, &ref, g);
 
-    return &(gn->edges);
+    return gn->edges;
 }

@@ -21,15 +21,16 @@ typedef struct list_t {
     size_t data_size;
 } list;
 
-list create_list(size_t data_size);
+list *create_list(size_t data_size);
 int is_empty(list *l);
-void insert_front(list *l, void *data);
-void insert_back(list *l, void *data);
+int insert_front(list *l, void *data);
+int insert_back(list *l, void *data);
 void *remove_front(list *l);
 void *remove_back(list *l);
 void *find(int (*cmp)(const void *, const void *), void *ref, list *l);
 void *remove_list_node(int (*cmp)(const void *, const void *), void *ref, list *l);
 void remove_all(list *l);
+int destroy_list(list *l);
 list copy_all(list *l);
 
 /******************************* iterator *******************************/

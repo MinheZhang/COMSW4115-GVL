@@ -30,7 +30,7 @@ typedef struct edge_t {
 
 typedef struct graph_node_t {
     node *n;
-    list edges;  // list of edge (data is pointer to edge)
+    list *edges;  // list of edge (data is pointer to edge)
 } graph_node;
 
 typedef list graph;  // graph: list of graph_node
