@@ -23,7 +23,7 @@ void dfs(graph *g, node *n) {
 }
 
 void test_list() {
-    list *l = create_list(sizeof(int));
+    list *l = create_list();
     for (int i = 0; i < 10; ++i) {
         int *t = malloc(sizeof(i));
         *t = i;

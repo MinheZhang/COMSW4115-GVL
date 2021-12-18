@@ -71,6 +71,7 @@ int get_edge_bold(edge *e);
 int get_edge_r(edge *e);
 int get_edge_g(edge *e);
 int get_edge_b(edge *e);
+int destroy_node(node *n);
 
 // Set edge attributes.
 int set_edge_start(edge *e, node *start);
@@ -79,6 +80,7 @@ int set_edge_bold(edge *e, int bold);
 int set_edge_r(edge *e, int r);
 int set_edge_g(edge *e, int g);
 int set_edge_b(edge *e, int b);
+int destroy_edge(edge *e);
 
 /******************************* Graph *******************************/
 

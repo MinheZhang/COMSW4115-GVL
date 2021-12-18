@@ -5,11 +5,11 @@
 #include <memory.h>
 #include "list.h"
 
-list *create_list(size_t data_size) {
+list *create_list() {
     list *l = malloc(sizeof(list));
     l->first = NULL;
     l->last = NULL;
-    l->data_size = data_size;
+    // l->data_size = (size_t)data_size;
     return l;
 }
 
@@ -146,6 +146,7 @@ int destroy_list(list *l) {
     return 0;
 }
 
+/*
 list copy_all(list *l) {
     list new_list = {NULL, NULL, l->data_size};
     list_node *n = l->first;
@@ -157,6 +158,7 @@ list copy_all(list *l) {
     }
     return new_list;
 }
+*/
 
 /******************************* iterator *******************************/
 list_iterator list_begin(list *l) {

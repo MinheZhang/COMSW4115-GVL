@@ -137,6 +137,11 @@ int set_node_extra(node *n, void *extra) {
     return 0;
 }
 
+int destroy_node(node *n) {
+    free(n);
+    return 0;
+}
+
 /******************************* edge *******************************/
 
 edge *create_edge(node *start, node *end, int bold, int r, int g, int b) {
@@ -213,18 +218,23 @@ int set_edge_b(edge *e, int b) {
     return 0;
 }
 
+int destroy_edge(edge *e) {
+    free(e);
+    return 0;
+}
+
 /******************************* graph *******************************/
 
 graph *create_graph() {
     graph *g;
-    g = create_list(sizeof(graph_node));
+    g = create_list();
     return g;
 }
 
 int add_node(graph *g, node *n) {
     graph_node *gn = malloc(sizeof(graph_node));
     gn->n = n;
-    gn->edges = create_list(sizeof(edge));
+    gn->edges = create_list();
     insert_front(g, gn);
     return 0;
 }
