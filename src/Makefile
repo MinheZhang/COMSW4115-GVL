@@ -22,7 +22,7 @@ gvl.native :
 	opam config exec -- \
 	ocamlbuild -use-ocamlfind gvl.native \
 	-package llvm -package llvm.analysis -package llvm.bitreader
-	$(GCC) -c lib/graph.c lib/list.c
+	$(GCC) -c lib/graph.c lib/list.c lib/graph_visualization.c -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lglad -ldl -lm
 	clang -emit-llvm -c lib/graph.c -o graph
 	$(GCC) -c lib/list.c
 	clang -emit-llvm -c lib/list.c -o list
