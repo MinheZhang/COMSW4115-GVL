@@ -58,7 +58,7 @@ let built_in_funcs = [
   ("remove_edge", [(Graph, "g"); (Node, "n")], Int);
   ("destroy_graph", [(Graph, "g")], Int);
   ("get_edges", [(Graph, "g"); (Node, "n")], GvlList);
-  (* TODO print_graph *)
+  ("show_graph", [(Graph, "g")], Int);
   (* List Functions *)
   ("list_begin", [(GvlList, "l")], GvlListIterator);
   ("list_end", [], GvlListIterator);
