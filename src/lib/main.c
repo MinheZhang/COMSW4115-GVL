@@ -23,20 +23,20 @@ void dfs(graph *g, node *n) {
 }
 
 void test_list() {
-    list l = create_list(sizeof(int));
+    list *l = create_list();
     for (int i = 0; i < 10; ++i) {
         int *t = malloc(sizeof(i));
         *t = i;
-        insert_back(&l, t);
+        insert_back(l, t);
     }
 
     for (int i = 0; i < 5; ++i) {
-        int *x = (int *)remove_front(&l);
+        int *x = (int *)remove_front(l);
         printf("%d\n", *x);
         free(x);
     }
 
-    remove_all(&l);
+    remove_all(l);
 }
 
 void graph_demo() {

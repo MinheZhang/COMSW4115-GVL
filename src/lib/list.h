@@ -18,19 +18,20 @@ typedef list_node * list_iterator;
 typedef struct list_t {
     list_node *first;
     list_node *last;
-    size_t data_size;
+    // size_t data_size;
 } list;
 
-list create_list(size_t data_size);
+list *create_list();
 int is_empty(list *l);
-void insert_front(list *l, void *data);
-void insert_back(list *l, void *data);
+int insert_front(list *l, void *data);
+int insert_back(list *l, void *data);
 void *remove_front(list *l);
 void *remove_back(list *l);
 void *find(int (*cmp)(const void *, const void *), void *ref, list *l);
 void *remove_list_node(int (*cmp)(const void *, const void *), void *ref, list *l);
 void remove_all(list *l);
-list copy_all(list *l);
+int destroy_list(list *l);
+// list copy_all(list *l);
 
 /******************************* iterator *******************************/
 list_iterator list_begin(list *l);
