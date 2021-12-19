@@ -20,13 +20,13 @@ let translate (globals, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
-  and node_t     = L.pointer_type (match L.type_by_name llm "struct.node_t" with
+  and node_t     = L.pointer_type (match L.type_by_name llm "struct.node_t" with (*type by name: llmodule -> string -> lltype option return the type in llm named struct.node_t*)
                                               None -> raise (Failure "the node type is not defined.")
                                             | Some x -> x)
   and edge_t     = L.pointer_type (match L.type_by_name llm "struct.edge_t" with
                                               None -> raise (Failure "the edge type is not defined.")
                                             | Some x -> x)
-  and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
+  and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with (*consider graph as a list?*)
                                               None -> raise (Failure "the graph type is not defined.")
                                             | Some x -> x)
   and list_t     = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
@@ -35,7 +35,7 @@ let translate (globals, functions) =
   and list_iterator_t = L.pointer_type (match L.type_by_name llm_list "struct.list_node_t" with
                                                   None -> raise (Failure "the list iterator type is not defined.")
                                                 | Some x -> x)
-  and void_ptr_t = L.pointer_type (L.i8_type context)
+  and void_ptr_t = L.pointer_type (L.i8_type context) 
   in
 
 	let ltype_of_typ = function

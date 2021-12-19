@@ -5,7 +5,7 @@ type uop = Neg | Not
 
 type typ = Bool | Int | Float | Char | String | StructID | Node | Edge | Graph | VoidPtr | GvlList | GvlListIterator
 
-type bind = typ * string
+type bind = typ * string (*define variable*)
 
 type expr = 
     Binop of expr * op * expr
@@ -37,7 +37,7 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = bind list * func_decl list
+type program = bind list * func_decl list (*allow global variable*)
 
 let string_of_op = function
     Add -> "+"
@@ -96,7 +96,8 @@ let rec string_of_stmt = function
   | Expr(e) -> string_of_expr e ^ ";\n"
   | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
-      string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2|   Vdecl(b) -> string_of_bind b
+      string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
+  | Vdecl(b) -> string_of_bind b
   | For(e1, e2, e3, s) ->
       "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
