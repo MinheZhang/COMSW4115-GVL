@@ -1,0 +1,10 @@
+int main() {
+  list l;
+  l = create_list();
+
+  node n;
+  n = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+  insert_back(l, n);
+
+  destroy_list(l);
+}

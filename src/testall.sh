@@ -94,7 +94,7 @@ Check() {
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
     Run "$GVL" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" "list.o" "graph.o" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" "list.o" "graph.o" "graph_visualization.o" " -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lglad -ldl -lm" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
