@@ -44,7 +44,7 @@ let check (globals, functions) =
        the given lvalue type *)
     let check_assign lvaluet rvaluet err =
       if (lvaluet = rvaluet
-          || lvaluet = VoidPtr
+          || (lvaluet = VoidPtr)
           || ((lvaluet = GvlListIterator || lvaluet = Node || lvaluet = Edge || lvaluet = Graph) && rvaluet = VoidPtr))
         then lvaluet else raise (Failure err)
     in
