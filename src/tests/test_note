@@ -1,0 +1,19 @@
+1.Functions:
+    fail:
+        func1: unrecognized function main
+        func2: redefinition of function 'main'
+        func3: redefinition of function 
+        func4: wrong number of arguments
+        func5: illegal argument type
+    success:
+        func1: printi()
+        func2: define function int x()
+        func3: define and call function in 'main'
+        func4: define function int x(int a, int b)
+        printc1: call function printc
+        printf1: call function printf
+        printstr1: call function prints
+
+2.Expressions:
+    
+    

@@ -1,0 +1,9 @@
+int main() {
+  int x;
+  x = 0;
+  while (10) {
+    printi(x);
+    x = x + 1;
+  }
+  return 0;
+}

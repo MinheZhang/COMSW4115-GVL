@@ -1,0 +1,20 @@
+int main() {
+  list l;
+  l = create_list();
+
+  node n1;
+  n1 = create_node(50.0, 1.0, 1.0, 255, 255, 255, 0);
+  insert_back(l, n1);
+
+  node n2;
+  n2 = create_node(0.0, -1.0, 1.0, 255, 255, 255, 0);
+  insert_front(l, n2);
+
+
+  node n_rm;
+  n_rm = remove_front(l);
+  printf(get_node_y(n_rm));
+  destroy_node(n_rm);
+
+  destroy_list(l);
+}

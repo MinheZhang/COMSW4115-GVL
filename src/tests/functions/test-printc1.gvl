@@ -1,0 +1,4 @@
+int main() {
+  printc("g");
+  return 0;
+}
