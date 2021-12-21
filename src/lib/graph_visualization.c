@@ -16,7 +16,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
     if ((key == GLFW_KEY_ESCAPE || key == GLFW_KEY_ENTER) && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
-}
+}bz
 
 GLFWwindow *create_window() {
     const char* description;

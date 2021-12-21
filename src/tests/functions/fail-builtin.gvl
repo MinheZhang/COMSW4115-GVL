@@ -1,0 +1,7 @@
+int get_node_r(node n) {
+  return i;
+}
+
+int main() {
+  return 0;
+}

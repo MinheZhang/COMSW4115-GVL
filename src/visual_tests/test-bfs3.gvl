@@ -1,0 +1,103 @@
+// bfs
+
+int bfs(graph g, node n) {
+  list queue;
+  queue = create_list();
+  insert_back(queue, n);
+
+  set_node_color(n, 100, 100, 100);
+  show_graph(g);
+  node newn;
+  while(is_empty(queue) == 0){
+    newn = remove_front(queue);
+    list adjs;
+    adjs = get_edges(g, newn);
+    list_iterator iter;
+    for (iter = list_begin(adjs); iter != list_end(); iter = list_iter_next(iter)){
+        edge e;
+        e = list_iter_data(iter);
+        node end_node;
+        end_node = get_edge_end(e);
+        if (get_node_r(end_node) != 100){
+            set_node_color(end_node, 100, 100, 100);
+            show_graph(g);
+            insert_back(queue, end_node);
+        }
+    }
+  }
+}
+/*
+int bfs(graph g, node n) {
+  set_node_color(n, 250, 0, 0);
+  show_graph(g);
+
+  list queue;
+  queue = create_list();
+  insert_back(queue, n);
+
+  node cur;
+  while(is_empty(queue) == 0) {
+
+    cur = remove_front(queue);
+    list adjs;
+    adjs = get_edges(g, cur);
+    list_iterator iter;
+    for (iter = list_begin(adjs); iter != list_end(); iter = list_iter_next(iter)) {
+      edge e;
+      e = list_iter_data(iter);
+      node end_node;
+      end_node = get_edge_end(e);
+      if (get_node_r(end_node) != 250) {
+        set_node_color(end_node, 250, 0, 0);
+        show_graph(g);
+        insert_back(queue, end_node);
+      }
+    }
+  }
+
+  destroy_list(queue);
+}
+
+*/
+int main() {
+
+  node n1;
+  n1 = create_node(50.0, 50.0, 10.0, 0, 0, 0, 0);
+  node n2;
+  n2 = create_node(150.0, 40.0, 10.0, 0, 0, 0, 0);
+  node n3;
+  n3 = create_node(150.0, 140.0, 10.0, 0, 0, 0, 0);
+  node n4;
+  n4 = create_node(250.0, 150.0, 10.0, 0, 0, 50, 50);
+  node n5;
+  n5 = create_node(250.0, 100.0, 10.0, 0, 40, 40, 0);
+
+
+  edge e12;
+  e12 = create_edge(n1, n2, 1, 0, 0, 0);
+  edge e13;
+  e13 = create_edge(n1, n3, 1, 0, 0, 0);
+  edge e34;
+  e34 = create_edge(n3, n4, 1, 0, 0, 0);
+  edge e35;
+  e35 = create_edge(n3, n5, 1, 0, 0, 0);
+
+  graph g;
+  g = create_graph();
+  
+  add_node(g, n1);
+  add_node(g, n2);
+  add_node(g, n3);
+  add_node(g, n4);
+  add_node(g, n5);
+  add_edge(g, e12);
+  add_edge(g, e13);
+  add_edge(g, e34);
+  add_edge(g, e35);
+
+  show_graph(g);
+  bfs(g, n1);
+
+  destroy_graph(g);
+  return 0;
+}
