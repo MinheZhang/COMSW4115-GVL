@@ -17,6 +17,7 @@ let built_in_funcs = [
     (Int, "r");
     (Int, "g");
     (Int, "b")], Int);
+  ("destroy_edge", [(Edge, "e")], Int);
   (* Get Edge Attributes *)
   ("get_edge_start", [(Edge, "e")], Node);
   ("get_edge_end", [(Edge, "e")], Node);
@@ -32,6 +33,7 @@ let built_in_funcs = [
   ("set_edge_g", [(Edge, "e"); (Int, "g")], Int);
   ("set_edge_b", [(Edge, "e"); (Int, "b")], Int);
   (* Node Functions *)
+  ("destroy_node", [(Node, "n")], Int);
   (* Get Node Attributes *)
   ("get_node_x", [(Node, "n")], Float);
   ("get_node_y", [(Node, "n")], Float);
@@ -58,8 +60,16 @@ let built_in_funcs = [
   ("remove_edge", [(Graph, "g"); (Node, "n")], Int);
   ("destroy_graph", [(Graph, "g")], Int);
   ("get_edges", [(Graph, "g"); (Node, "n")], GvlList);
-  (* TODO print_graph *)
+  ("show_graph", [(Graph, "g")], Int);
   (* List Functions *)
+  ("create_list", [], GvlList);
+  ("is_empty", [(GvlList, "l")], Int);
+  ("insert_front", [(GvlList, "l"); (VoidPtr, "data")], Int);
+  ("insert_back", [(GvlList, "l"); (VoidPtr, "data")], Int);
+  ("remove_front", [(GvlList, "l")], VoidPtr);
+  ("remove_back", [(GvlList, "l")], VoidPtr);
+  ("destroy_list", [(GvlList, "l")], Int);
+  (* List Iterator Functions *)
   ("list_begin", [(GvlList, "l")], GvlListIterator);
   ("list_end", [], GvlListIterator);
   ("list_iter_next", [(GvlListIterator, "iter")], GvlListIterator);
