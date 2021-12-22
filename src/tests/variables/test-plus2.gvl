@@ -1,0 +1,9 @@
+int a;
+
+int main(){
+    a = 1;
+    int c;
+    c = 2 + a;
+    printi(c);
+    return 0;
+}

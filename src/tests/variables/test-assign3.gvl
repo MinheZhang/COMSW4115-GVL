@@ -1,6 +1,4 @@
 int main(){
-  int x;
-  x = 2;
   char s;
   s = 'g';
   return 0;

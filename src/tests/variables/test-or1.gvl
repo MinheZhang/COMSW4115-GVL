@@ -1,0 +1,9 @@
+int main(){
+    bool x;
+    x = true;
+    bool y;
+    y = false;
+    y = y || x;
+    printb(y);
+    return 0;
+}

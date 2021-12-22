@@ -1,0 +1,10 @@
+int main()
+{   
+    int a ;
+    a = 3;
+    int b ;
+    b = 2;
+    a = a / b;
+    printi(a);
+    return 0;
+}

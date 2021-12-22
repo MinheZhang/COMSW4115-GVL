@@ -1,0 +1,9 @@
+int main()
+{   
+    bool a ;
+    a = true;
+    bool b ;
+    b = true;
+    a / b;
+    return 0;
+}

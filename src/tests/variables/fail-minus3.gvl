@@ -1,0 +1,9 @@
+int main()
+{
+    float b;
+    int a;
+    a = 1;
+    b = 1.5;
+    b = a - b;
+    return 0;
+}
