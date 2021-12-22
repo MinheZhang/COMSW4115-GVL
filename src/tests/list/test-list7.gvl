@@ -1,0 +1,33 @@
+int main() {
+  list l;
+  l = create_list();
+  
+  node n;
+  int i;
+  for (i = 0; i < 4; i = i + 1) {
+    n = create_node(0.0, 1.0, 1.0, i, 0, 0, 0);
+    insert_front(l, n);
+  }
+  for (i = 0; i < 2; i = i + 1) {
+    n = remove_front(l);
+    printi(get_node_r(n));
+    destroy_node(n);
+  }
+  for (i = 0; i < 2; i = i + 1) {
+    n = create_node(0.0, 1.0, 1.0, i, 0, 0, 0);
+    insert_back(l, n);
+  }
+  for (i = 0; i < 4; i = i + 1) {
+    n = remove_back(l);
+    printi(get_node_r(n));
+    destroy_node(n);
+  }
+
+  if (is_empty(l) == 1) {
+    prints("list is empty");
+  }
+
+  destroy_list(l);
+
+  return 0;
+}
