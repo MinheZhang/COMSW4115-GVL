@@ -36,11 +36,11 @@ Check() {
 
     generatedfiles=""
 
-    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
+    generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe" &&
     Run "$GVL" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
     Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" "list.o" "graph.o" "graph_visualization.o" " -lGL -lGLU -lglfw -lX11 -lXxf86vm -lXrandr -lpthread -lXi -lglad -ldl -lm" &&
-    Run "./${basename}.exe" > "${basename}.out"
+    Run "./${basename}.exe"
 
     # Report the status and clean up the generated files
 
