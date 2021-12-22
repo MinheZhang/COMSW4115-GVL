@@ -1,13 +1,8 @@
 float a;
 int b;
 
-int foo()
-{
-  a + b;
-  return 0;
-}
-
 int main()
-{
+{  
+  a + b;
   return 0;
 }
