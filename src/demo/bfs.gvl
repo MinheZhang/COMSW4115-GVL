@@ -1,0 +1,90 @@
+int bfs(graph g, node n, int visited_r) {
+  set_node_color(n, visited_r, 0, 0);
+  show_graph(g);
+
+  list queue;
+  queue = create_list();
+  insert_back(queue, n);
+
+  while(is_empty(queue) == 0) {
+    node cur;
+    cur = remove_front(queue);
+    list adjs;
+    adjs = get_edges(g, cur);
+    list_iterator iter;
+    for (iter = list_begin(adjs); iter != list_end(); iter = list_iter_next(iter)) {
+      edge e;
+      e = list_iter_data(iter);
+      node end_node;
+      end_node = get_edge_end(e);
+      if (get_node_r(end_node) != visited_r) {
+        set_node_color(end_node, visited_r, 0, 0);
+        show_graph(g);
+        insert_back(queue, end_node);
+      }
+    }
+  }
+
+  destroy_list(queue);
+}
+
+
+int main() {
+
+  node n1;
+  n1 = create_node(150.0, 400.0, 10.0, 0, 0, 0, 0);
+  node n2;
+  n2 = create_node(300.0, 400.0, 10.0, 0, 0, 0, 0);
+  node n3;
+  n3 = create_node(150.0, 250.0, 10.0, 0, 0, 0, 0);
+  node n4;
+  n4 = create_node(300.0, 250.0, 10.0, 0, 0, 0, 0);
+  node n5;
+  n5 = create_node(150.0, 100.0, 10.0, 0, 0, 0, 0);
+  node n6;
+  n6 = create_node(300.0, 100.0, 10.0, 0, 0, 0, 0);
+
+  edge e12;
+  e12 = create_edge(n1, n2, 1, 0, 0, 0);
+  edge e13;
+  e13 = create_edge(n1, n3, 1, 0, 0, 0);
+  edge e23;
+  e23 = create_edge(n2, n3, 1, 0, 0, 0);
+  edge e24;
+  e24 = create_edge(n2, n4, 1, 0, 0, 0);
+  edge e36;
+  e36 = create_edge(n3, n6, 1, 0, 0, 0);
+  edge e34;
+  e34 = create_edge(n3, n4, 1, 0, 0, 0);
+  edge e46;
+  e46 = create_edge(n4, n6, 1, 0, 0, 0);
+  edge e54;
+  e54 = create_edge(n5, n4, 1, 0, 0, 0);
+  edge e65;
+  e65 = create_edge(n6, n5, 1, 0, 0, 0);
+
+  graph g;
+  g = create_graph();
+  
+  g +o n1;
+  g +o n2;
+  g +o n3;
+  g +o n4;
+  g +o n5;
+  g +o n6;
+  g +- e12;
+  g +- e13;
+  g +- e23;
+  g +- e24;
+  g +- e36;
+  g +- e34;
+  g +- e46;
+  g +- e65;
+
+  show_graph(g);
+  bfs(g, n1, 250);
+
+  destroy_graph(g);
+
+  return 0;
+}
