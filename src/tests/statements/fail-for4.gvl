@@ -1,0 +1,7 @@
+int main() {
+  node x;
+  x = create_node(1.0, 1.0, 1.0, 255, 255, 255, 0);
+  for (; x; ) {
+  }
+  return 0;
+}

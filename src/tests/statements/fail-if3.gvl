@@ -1,14 +1,10 @@
-<<<<<<< HEAD
 int main() {
-  if (0){
+  int x;
+  x = 0;
+  if (x) {
     printi(1);
   } else {
     printi(0);
   }
   return 0;
-=======
-int main()
-{
-  if (22) {} 
->>>>>>> main
 }
