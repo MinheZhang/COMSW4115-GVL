@@ -1,0 +1,10 @@
+int main() {
+  int x;
+  x = 0;
+  if (x) {
+    printi(1);
+  } else {
+    printi(0);
+  }
+  return 0;
+}
