@@ -51,12 +51,6 @@ let translate (globals, functions) =
     | A.GvlListIterator -> list_iterator_t
 	in
 
-  let edge_ptr_t = L.pointer_type edge_t in
-  let dereference_typ = function
-      edge_ptr_t -> edge_t
-    | _ -> raise (Failure "type cannot be dereferenced")
-  in
-
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
     let global_var m (t, n) = 
@@ -193,7 +187,7 @@ let translate (globals, functions) =
             (A.VoidPtr, _) ->
               let e' = expr builder e in
               let v_val = lookup v in
-              let cast_typ = dereference_typ (L.type_of v_val) in
+              let cast_typ = L.element_type (L.type_of v_val) in
               let cast_val = L.build_bitcast e' cast_typ "cast" builder in
                 ignore(L.build_store cast_val v_val builder); cast_val
           | _ ->
@@ -223,6 +217,10 @@ let translate (globals, functions) =
         and b'      = (expr builder b) in
         L.build_call create_node_func [| x'; y'; radius'; r'; g'; b'; (L.const_pointer_null void_ptr_t) |]
           "create_node" builder
+      | SCall ("insert_front" as f, [l; data]) | SCall ("insert_back" as f, [l; data]) ->
+          let cast_data = L.build_bitcast (expr builder data) void_ptr_t "cast_void" builder in
+          let fdef = StringMap.find f function_decls in
+          L.build_call fdef [| (expr builder l) ; cast_data |] (f ^ "_result") builder
       | SCall (f, args) ->
           (* let (fdef, fdecl) = StringMap.find f function_decls in *)
           let fdef = StringMap.find f function_decls in
