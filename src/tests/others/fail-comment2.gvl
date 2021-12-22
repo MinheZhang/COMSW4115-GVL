@@ -1,0 +1,9 @@
+int main() {
+    /* comment
+       multi-line
+       comment
+     */
+     */
+    prints("commentout");
+    return 0;
+}

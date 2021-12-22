@@ -1,0 +1,30 @@
+int main() {
+
+  node n1;
+  n1 = create_node(50.0, 50.0, 10.0, 0, 0, 0, 0);
+  node n2;
+  n2 = create_node(150.0, 40.0, 10.0, 255, 255, 0, 0);
+  node n3;
+  n3 = create_node(150.0, 140.0, 10.0, 0, 0, 255, 0);
+
+  edge e12;
+  e12 = create_edge(n1, n2, 1, 0, 0, 0);
+  edge e13;
+  e13 = create_edge(n1, n3, 1, 0, 0, 0);
+  edge e23;
+  e23 = create_edge(n2, n3, 1, 0, 0, 0);
+
+  graph g;
+  g = create_graph();
+  
+  add_node(g, n1);
+  add_node(g, n2);
+  add_node(g, n3);
+  add_edge(g, e12);
+  add_edge(g, e13);
+  add_edge(g, e23);
+
+  show_graph(g);
+  destroy_graph(g);
+  return 0;
+}
