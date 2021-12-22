@@ -1,8 +1,7 @@
-int x(int i) {
+int get_node_r(node n) {
   return i;
 }
 
 int main() {
-  printi(x(1));
   return 0;
 }
