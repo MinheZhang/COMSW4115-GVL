@@ -1,6 +1,0 @@
-int main(){
-    int a;
-    a = 1234567891011;
-    printi(a);
-    reutrn 0;
-}

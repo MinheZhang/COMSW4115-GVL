@@ -1,9 +1,0 @@
-int main()
-{
-    float b;
-    float a;
-    a = 2.5;
-    b = 1.5;
-    b = a % b;
-    return 0;
-}
