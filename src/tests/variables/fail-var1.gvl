@@ -1,5 +1,4 @@
 int main() {
-  int y = 10;
   printi(x);
   return 0;
 }
