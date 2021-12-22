@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 int main() {
   if (0){
     printi(1);
@@ -5,4 +6,9 @@ int main() {
     printi(0);
   }
   return 0;
+=======
+int main()
+{
+  if (22) {} 
+>>>>>>> main
 }

@@ -1,7 +1,3 @@
-int x(int i) {
-  return i;
-}
-
 int main() {
   printi(x(1));
   return 0;

@@ -1,0 +1,36 @@
+// insert & remove edge
+
+int main() {
+  list l;
+  l = create_list();
+
+  node n1;
+  n1 = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+  node n2;
+  n2 = create_node(10.0, 11.0, 1.0, 255, 255, 255, 0);
+  node n3;
+  n3 = create_node(20.0, 21.0, 1.0, 255, 255, 255, 0);
+  edge e12;
+  e12 = create_edge(n1, n2, 1, 1, 1, 1);
+  edge e23;
+  e23 = create_edge(n2, n3, 1, 2, 1, 1);
+  edge e13;
+  e13 = create_edge(n1, n3, 1, 3, 1, 1);
+  edge e31;
+  e31 = create_edge(n3, n1, 1, 4, 1, 1);
+
+  insert_back(l, e12);
+  insert_back(l, e23);
+  insert_back(l, e13);
+  insert_back(l, e31);
+  
+  int i;
+  for (i = 0; i < 4; i = i + 1) {
+    edge e;
+    e = remove_front(l);
+    printi(get_edge_r(e));
+    destroy_edge(e);
+  }
+
+  destroy_list(l);
+}
