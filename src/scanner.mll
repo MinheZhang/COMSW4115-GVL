@@ -49,6 +49,8 @@ rule tokenize = parse
 | ':' { COLON }
 | "++" { PLUSPLUS }
 | "--" { MINUSMINUS }
+| "+o" { PLUSNODE }
+| "+-" { PLUSEDGE }
 (* CONTROL FLOW KEYWORDS *)
 | "if" { IF }
 | "else" { ELSE }
