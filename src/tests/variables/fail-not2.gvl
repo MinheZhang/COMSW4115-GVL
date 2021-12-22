@@ -1,0 +1,6 @@
+int main(){
+    int a;
+    bool b;
+    b = false;
+    a = !b;
+}

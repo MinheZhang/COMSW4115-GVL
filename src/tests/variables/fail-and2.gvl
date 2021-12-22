@@ -1,0 +1,7 @@
+int main()
+{   
+    int a = 3;
+    char b = 'B';
+    a && b;
+    return 0;
+}

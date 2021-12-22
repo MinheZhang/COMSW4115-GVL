@@ -1,0 +1,10 @@
+int main()
+{   
+    float a;
+    a = 3.0;
+    float b;
+    b = 0.0;
+    a = a / b;
+    printf(a);
+    return 0;
+}

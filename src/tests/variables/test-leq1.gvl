@@ -1,0 +1,6 @@
+int main(){
+    bool res;
+    res = (1 <= 2) ;
+    printb(res);
+    return 0;
+}

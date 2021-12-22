@@ -1,0 +1,5 @@
+int main(){
+    bool res;
+    res = (0.3 <= 2) ;
+    return 0;
+}
