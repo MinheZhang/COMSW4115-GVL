@@ -107,10 +107,7 @@ typ:
 | EDGE        { Edge }
 | GRAPH       { Graph }
 | LIST        { GvlList }
-<<<<<<< HEAD
-=======
 | LISTITER    { GvlListIterator }
->>>>>>> main
 //| typ LBRACKET expr RBRACKET {}  // TODO
 
 
