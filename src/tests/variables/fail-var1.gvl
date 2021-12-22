@@ -1,0 +1,4 @@
+int main() {
+  printi(x);
+  return 0;
+}

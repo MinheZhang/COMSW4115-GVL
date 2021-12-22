@@ -1,0 +1,32 @@
+// is_empty
+
+int main() {
+  list l;
+  l = create_list();
+
+  node n1;
+  n1 = create_node(0.0, 1.0, 1.0, 255, 255, 255, 0);
+  node n2;
+  n2 = create_node(10.0, 11.0, 1.0, 255, 255, 255, 0);
+  node n3;
+  n3 = create_node(20.0, 21.0, 1.0, 255, 255, 255, 0);
+  node n4;
+  n4 = create_node(30.0, 31.0, 1.0, 255, 255, 255, 0);
+  node n5;
+  n5 = create_node(40.0, 41.0, 1.0, 255, 255, 255, 0);
+
+  insert_front(l, n1);
+  insert_front(l, n2);
+  insert_front(l, n3);
+  insert_front(l, n4);
+  insert_front(l, n5);
+  
+  while (is_empty(l) == 0) {
+    node n;
+    n = remove_back(l);
+    printf(get_node_x(n));
+    destroy_node(n);
+  }
+
+  destroy_list(l);
+}

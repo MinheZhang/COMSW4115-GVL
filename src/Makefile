@@ -11,7 +11,7 @@ test : all testall.sh
 .PHONY : all
 all : gvl.native printbig.o
 
-# "make microc.native" compiles the compiler
+# "make gvl.native" compiles the compiler
 #
 # The _tags file controls the operation of ocamlbuild, e.g., by including
 # packages, enabling warnings
