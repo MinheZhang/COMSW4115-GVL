@@ -6,7 +6,7 @@
 /* operators: assignment */
 %token ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
 /* operators: graph */
-%token PLUSPLUS MINUSMINUS
+%token PLUSPLUS MINUSMINUS PLUSEDGE PLUSNODE
 /* controal flow keywords*/
 %token IF ELSE WHILE FOR BREAK CONTINUE RETURN
 /* separators */
@@ -29,7 +29,7 @@
 %token EOF
 
 %nonassoc NOELSE
-%nonassoc PLUSPLUS MINUSMINUS
+%nonassoc PLUSPLUS MINUSMINUS PLUSEDGE PLUSNODE
 %left ELSE
 %right ASSIGN PLUS_ASSIGN MINUS_ASSIGN TIMES_ASSIGN DIVIDE_ASSIGN MOD_ASSIGN
 %left OR
@@ -150,6 +150,8 @@ expr:
 | expr MOD expr               { Binop($1, Mod, $3) }
 //| expr PLUSPLUS expr          { }  // TODO
 //| expr MINUSMINUS expr        { }
+| expr PLUSNODE expr          { Call("add_node", ($1 :: $3 :: [])) }
+| expr PLUSEDGE expr          { Call("add_edge", ($1 :: $3 :: [])) }
 | expr EQ  expr               { Binop($1, Equal, $3) }
 | expr NEQ expr               { Binop($1, Neq, $3) }
 | expr LT expr                { Binop($1, Less, $3) }
