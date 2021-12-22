@@ -20,13 +20,13 @@ let translate (globals, functions) =
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
-  and node_t     = L.pointer_type (match L.type_by_name llm "struct.node_t" with (*type by name: llmodule -> string -> lltype option return the type in llm named struct.node_t*)
+  and node_t     = L.pointer_type (match L.type_by_name llm "struct.node_t" with
                                               None -> raise (Failure "the node type is not defined.")
                                             | Some x -> x)
   and edge_t     = L.pointer_type (match L.type_by_name llm "struct.edge_t" with
                                               None -> raise (Failure "the edge type is not defined.")
                                             | Some x -> x)
-  and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with (*consider graph as a list?*)
+  and graph_t    = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
                                               None -> raise (Failure "the graph type is not defined.")
                                             | Some x -> x)
   and list_t     = L.pointer_type (match L.type_by_name llm_list "struct.list_t" with
@@ -35,7 +35,7 @@ let translate (globals, functions) =
   and list_iterator_t = L.pointer_type (match L.type_by_name llm_list "struct.list_node_t" with
                                                   None -> raise (Failure "the list iterator type is not defined.")
                                                 | Some x -> x)
-  and void_ptr_t = L.pointer_type (L.i8_type context) 
+  and void_ptr_t = L.pointer_type (L.i8_type context)
   in
 
 	let ltype_of_typ = function
@@ -50,6 +50,12 @@ let translate (globals, functions) =
     | A.GvlList -> list_t
     | A.GvlListIterator -> list_iterator_t
 	in
+
+  let edge_ptr_t = L.pointer_type edge_t in
+  let dereference_typ = function
+      edge_ptr_t -> edge_t
+    | _ -> raise (Failure "type cannot be dereferenced")
+  in
 
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
@@ -187,7 +193,7 @@ let translate (globals, functions) =
             (A.VoidPtr, _) ->
               let e' = expr builder e in
               let v_val = lookup v in
-              let cast_typ = L.element_type (L.type_of v_val) in
+              let cast_typ = dereference_typ (L.type_of v_val) in
               let cast_val = L.build_bitcast e' cast_typ "cast" builder in
                 ignore(L.build_store cast_val v_val builder); cast_val
           | _ ->
@@ -217,10 +223,6 @@ let translate (globals, functions) =
         and b'      = (expr builder b) in
         L.build_call create_node_func [| x'; y'; radius'; r'; g'; b'; (L.const_pointer_null void_ptr_t) |]
           "create_node" builder
-      | SCall ("insert_front" as f, [l; data]) | SCall ("insert_back" as f, [l; data]) ->
-          let cast_data = L.build_bitcast (expr builder data) void_ptr_t "cast_void" builder in
-          let fdef = StringMap.find f function_decls in
-          L.build_call fdef [| (expr builder l) ; cast_data |] (f ^ "_result") builder
       | SCall (f, args) ->
           (* let (fdef, fdecl) = StringMap.find f function_decls in *)
           let fdef = StringMap.find f function_decls in

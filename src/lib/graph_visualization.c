@@ -109,7 +109,7 @@ void draw_graph(graph *g) {
     list_node *iter = g->first;
     while(iter) {
         graph_node *gn = (graph_node *)iter->data;
-        list_node *edge_iter = gn->edges->first;
+        list_node *edge_iter = gn->edges.first;
 
         draw_circle(gn->n->x, gn->n->y, gn->n->radius, gn->n->r, gn->n->g, gn->n->b);
 

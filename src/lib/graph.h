@@ -30,7 +30,7 @@ typedef struct edge_t {
 
 typedef struct graph_node_t {
     node *n;
-    list *edges;  // list of edge (data is pointer to edge)
+    list edges;  // list of edge (data is pointer to edge)
 } graph_node;
 
 typedef list graph;  // graph: list of graph_node
@@ -71,7 +71,6 @@ int get_edge_bold(edge *e);
 int get_edge_r(edge *e);
 int get_edge_g(edge *e);
 int get_edge_b(edge *e);
-int destroy_node(node *n);
 
 // Set edge attributes.
 int set_edge_start(edge *e, node *start);
@@ -80,7 +79,6 @@ int set_edge_bold(edge *e, int bold);
 int set_edge_r(edge *e, int r);
 int set_edge_g(edge *e, int g);
 int set_edge_b(edge *e, int b);
-int destroy_edge(edge *e);
 
 /******************************* Graph *******************************/
 

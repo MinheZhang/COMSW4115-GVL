@@ -5,11 +5,8 @@
 #include <memory.h>
 #include "list.h"
 
-list *create_list() {
-    list *l = malloc(sizeof(list));
-    l->first = NULL;
-    l->last = NULL;
-    // l->data_size = (size_t)data_size;
+list create_list(size_t data_size) {
+    list l = {NULL, NULL, data_size};
     return l;
 }
 
@@ -17,7 +14,7 @@ int is_empty(list *l) {
     return (l->first == NULL);
 }
 
-int insert_front(list *l, void *data) {
+void insert_front(list *l, void *data) {
     list_node *ln = malloc(sizeof(list_node));
     ln->data = data;
     ln->prev = NULL;
@@ -30,11 +27,9 @@ int insert_front(list *l, void *data) {
         l->last = ln;
     }
     l->first = ln;
-
-    return 0;
 }
 
-int insert_back(list *l, void *data) {
+void insert_back(list *l, void *data) {
     list_node *ln = malloc(sizeof(list_node));
     ln->data = data;
     ln->next = NULL;
@@ -47,8 +42,6 @@ int insert_back(list *l, void *data) {
         l->first = ln;
     }
     l->last = ln;
-
-    return 0;
 }
 
 list_node *find_node(int (*cmp)(const void *, const void *), void *ref, list *l) {
@@ -137,16 +130,8 @@ void remove_all(list *l) {
         void *data = remove_front(l);
         free(data);
     }
-    free(l);
-    l = NULL;
 }
 
-int destroy_list(list *l) {
-    remove_all(l);
-    return 0;
-}
-
-/*
 list copy_all(list *l) {
     list new_list = {NULL, NULL, l->data_size};
     list_node *n = l->first;
@@ -158,7 +143,6 @@ list copy_all(list *l) {
     }
     return new_list;
 }
-*/
 
 /******************************* iterator *******************************/
 list_iterator list_begin(list *l) {
